@@ -4,9 +4,15 @@ from vk_bot.user import VkUserClient, StateEnum
 
 class ActionEnum:
     PRESSED_NEXT_BUTTON: 0
+<<<<<<< HEAD
     PRESSED_SHOW_FAVORITES: 1
     PRESSED_BLOCK_USER: 2
     PLAIN_TEXT: 3
+=======
+    PRESSED_SHOW_FAVORITES: 0
+    PRESSED_BLOCK_USER: 0
+    PLAIN_TEXT: 0
+>>>>>>> 0e5e2bd11e300bb4dee4b2eba8214374dcee5a31
 
 
 class VkBot:
