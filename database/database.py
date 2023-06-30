@@ -17,15 +17,15 @@ class Database:
         self.bd_name = os.getenv("bd_name")
         self.bd_username = os.getenv("bd_username")
         self.bd_pass = os.getenv("bd_pass")
-        self.file_name = os.getenv("file_name")
-        self.bd_localhost = os.getenv("localhost")
+        self.bd_host = os.getenv("bd_host")
+        self.token = os.getenv("token")
 
     def create_conect(self):
         dsn = "{}://{}:{}@{}:{}/{}".format(
             self.bd,
             self.bd_username,
             self.bd_pass,
-            self.bd_localhost,
+            self.bd_host,
             self.bd_port,
             self.bd_name,
         )
