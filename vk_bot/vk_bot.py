@@ -13,7 +13,7 @@ class VkBot:
     def __init__(self):
         self.current_queues = {}
 
-    def action(self, user_id, action_type: ActionEnum, message=""):
+    def action(self, user_id: int, action_type: ActionEnum, message=""):
         user = VkUserClient(user_id)
         self.perform_user_action(user, action_type, message)
 
