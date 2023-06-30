@@ -17,7 +17,7 @@ class Favorite(Base):
     __tablename__ = "favorite"
 
     favorite_id = sq.Column(sq.Integer, primary_key=True)
-    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user_id"), nullable=False)
+    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
     favorite_vk_user_id = sq.Column(sq.BigInteger, nullable=True)
 
     favorite = relationship(User, backref="user")
@@ -26,7 +26,7 @@ class Blacklist(Base):
     __tablename__ = "blacklist"
 
     blacklist_id = sq.Column(sq.Integer, primary_key=True)
-    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user_id"), nullable=False)
+    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
     blocked_vk_user_id = sq.Column(sq.Integer, nullable=True)
 
     user = relationship(User, backref="user")
@@ -35,7 +35,7 @@ class State(Base):
     __tablename__ = "state"
 
     state_id = sq.Column(sq.Integer, primary_key=True)
-    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user_id"), nullable=False)
+    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
     state = sq.Column(sq.Integer)
 
     user = relationship(User, backref="user")
