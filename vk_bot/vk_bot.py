@@ -32,7 +32,9 @@ class VkBot:
         match user.state:
             case StateEnum.REGISTERED:
                 pass
-            case StateEnum.ASK_AGE:
+            case StateEnum.ASK_AGE_MIN:
+                pass
+            case StateEnum.ASK_AGE_MAX:
                 pass
             case StateEnum.ASK_CITY:
                 pass

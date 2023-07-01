@@ -27,25 +27,29 @@ class VkUser:
 class VkUserClient(VkUser):
     def __init__(self, user_id):
         super().__init__(user_id)
-        self.age = None
+        self.age_min = None
+        self.age_max = None
         self.city = None
         self.gender = None
-        self.state = StateEnum.ASK_AGE
+        self.state = StateEnum.ASK_AGE_MIN
         self.try_get_data()
 
     def try_get_data(self):
         if check_user_exits(self.user_id):
             data = get_user_data(self.user_id)
             self.state = StateEnum(data.state)
-            self.age = data.age
+            self.age_min = data.age_min
+            self.age_min = data.age_max
             self.city = data.city
             self.gender = GenderEnum(data.gender)
 
     def check_next_state(self):
         if self.state == StateEnum.REGISTERED:
             return
-        elif self.age is None:
-            self.state = StateEnum.ASK_AGE
+        elif self.age_min is None:
+            self.state = StateEnum.ASK_AGE_MIN
+        elif self.age_max is None:
+            self.state = StateEnum.ASK_AGE_MAX
         elif self.city is None:
             self.state = StateEnum.ASK_CITY
         elif self.gender is None:
