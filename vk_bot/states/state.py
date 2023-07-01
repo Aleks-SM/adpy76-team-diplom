@@ -7,3 +7,11 @@ class StateEnum(Enum):
     ASK_CITY: 2
     ASK_GENDER: 3
     REGISTERED: 4
+
+
+class State:
+    def init(self):
+        return
+    
+    def feedback(self):
+        return
