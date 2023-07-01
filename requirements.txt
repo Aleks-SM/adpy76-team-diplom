@@ -10,3 +10,4 @@ python-dotenv==1.0.0
 SQLAlchemy==2.0.17
 tomli==2.0.1
 typing-extensions==4.7.0
+vkbottle==4.3.12
