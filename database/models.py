@@ -9,9 +9,10 @@ class User(Base):
 
     user_id = sq.Column(sq.BigInteger, primary_key=True)
     user_name = sq.Column(sq.String(length=50), unique=True)
-    search_gender = sq.Column(sq.String(length=1), nullable=False)
+    search_gender = sq.Column(sq.Integer, nullable=False)
     search_age = sq.Column(sq.String(5), nullable=False)
     search_city = sq.Column(sq.String(length=50), nullable=False)
+    state = sq.Column(sq.Integer)
 
 class Favorite(Base):
     __tablename__ = "favorite"
@@ -20,7 +21,7 @@ class Favorite(Base):
     user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
     favorite_vk_user_id = sq.Column(sq.BigInteger, nullable=True)
 
-    favorite = relationship(User, backref="user")
+    favorite = relationship(User, backref="user_fav")
 
 class Blacklist(Base):
     __tablename__ = "blacklist"
@@ -29,13 +30,4 @@ class Blacklist(Base):
     user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
     blocked_vk_user_id = sq.Column(sq.Integer, nullable=True)
 
-    user = relationship(User, backref="user")
-    
-class State(Base):
-    __tablename__ = "state"
-
-    state_id = sq.Column(sq.Integer, primary_key=True)
-    user_id = sq.Column(sq.BigInteger, sq.ForeignKey("user.user_id"), nullable=False)
-    state = sq.Column(sq.Integer)
-
-    user = relationship(User, backref="user")
+    user = relationship(User, backref="user_black")
