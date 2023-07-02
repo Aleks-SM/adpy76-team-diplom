@@ -66,3 +66,4 @@ class VkUserSearch(VkUser):
         self.photos = []
         self.related_photos = []
         self.interests = set
+        self.age = int
