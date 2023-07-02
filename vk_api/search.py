@@ -31,6 +31,9 @@ class VkSearchEngine:
     def search_people(self) -> list[VkUserSearch]:
         pass
 
+    def get_interests(self, user_id: int) -> set[str]:
+        pass
+    
     async def search_user_params(self):
         fields = [
             'first_name',
