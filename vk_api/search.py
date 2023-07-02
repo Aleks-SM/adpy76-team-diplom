@@ -2,21 +2,12 @@ import asyncio
 import os
 from datetime import datetime
 from vkbottle import API
-from dotenv import load_dotenv
-
-
-def init_env():
-    if os.path.join(os.path.dirname(__file__), ".envrc"):
-        path = os.path.split(os.path.dirname(__file__))
-        dotenv_path = os.path.join(path[0], ".envrc")
-    else:
-        dotenv_path = os.path.join(os.path.dirname(__file__), ".envrc")
-    if os.path.exists(dotenv_path):
-        load_dotenv(dotenv_path)
+from database.database import Database
 
 
 class VkSearchEngine:
-    init_env()
+    env_connector = Database()
+    env_connector.create_conect()
 
     def __init__(
             self,
@@ -74,7 +65,6 @@ class VkSearchEngine:
             age_from=self.searched_age_from,
             age_to=self.searched_age_to,
             has_photo=True,
-
         )
 
         for res in peoples.items:
