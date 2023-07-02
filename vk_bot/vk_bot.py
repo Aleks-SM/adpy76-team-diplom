@@ -1,5 +1,5 @@
 from queue import Queue
-from vk_bot.user import VkUserClient, StateEnum
+from vk_bot.user import VkUserClient, VkUserSearch, StateEnum
 
 
 class ActionEnum:

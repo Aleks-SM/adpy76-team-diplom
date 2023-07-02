@@ -18,7 +18,7 @@ class Database:
         self.bd_username = os.getenv("bd_username")
         self.bd_pass = os.getenv("bd_pass")
         self.bd_host = os.getenv("bd_host")
-        self.token = os.getenv("token")
+        self.token = os.getenv("vk_token")
 
     def create_conect(self):
         dsn = "{}://{}:{}@{}:{}/{}".format(

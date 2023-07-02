@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from vkbottle import API
 from database.database import Database
-
+from vk_bot.vk_bot import VkUserSearch, VkUserClient
 
 class VkSearchEngine:
     env_connector = Database()
@@ -11,12 +11,7 @@ class VkSearchEngine:
 
     def __init__(
             self,
-            user_id: int,
-            searched_gender: str = None,
-            searched_age_from: int = None,
-            searched_age_to: int = None,
-            searched_city: str = None,
-            interest: str = None,
+            user: VkUserClient
     ):
         self.user_id = user_id
         self.user_name = None
@@ -33,6 +28,9 @@ class VkSearchEngine:
         self.blocked_vk_id: list = []
         self.searched_people = {}
         self.added_photo = []
+
+    def search_people(self) -> list[VkUserSearch]:
+        pass
 
     async def search_user_params(self):
         fields = [
