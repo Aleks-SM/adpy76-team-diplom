@@ -6,8 +6,7 @@ from database.database import Database
 
 
 class VkSearchEngine:
-    env_connector = Database()
-    env_connector.create_conect()
+    Database().create_conect()
 
     def __init__(
             self,
