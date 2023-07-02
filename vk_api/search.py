@@ -6,8 +6,7 @@ from database.database import Database
 from vk_bot.vk_bot import VkUserSearch, VkUserClient
 
 class VkSearchEngine:
-    env_connector = Database()
-    env_connector.create_conect()
+    Database().create_conect()
 
     def __init__(
             self,
