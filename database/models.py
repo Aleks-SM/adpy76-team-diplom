@@ -10,7 +10,8 @@ class User(Base):
     user_id = sq.Column(sq.BigInteger, primary_key=True)
     user_name = sq.Column(sq.String(length=50), unique=True)
     search_gender = sq.Column(sq.Integer, nullable=False)
-    search_age = sq.Column(sq.String(5), nullable=False)
+    search_age_min = sq.Column(sq.Integer, nullable=False)
+    search_age_max = sq.Column(sq.Integer, nullable=False)
     search_city = sq.Column(sq.String(length=50), nullable=False)
     state = sq.Column(sq.Integer)
 
