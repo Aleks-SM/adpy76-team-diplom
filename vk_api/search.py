@@ -92,6 +92,9 @@ class VKSearcherUser(VkSearcherEngine):
                 photo = size.url
             self.related_photos.append(photo)
 
+    async def get_interests(self) -> set[str]:
+        pass
+
     async def vk_user_search_params(self):
         user_params = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
         params = user_params[0]
