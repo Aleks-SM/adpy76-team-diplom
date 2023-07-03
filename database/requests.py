@@ -47,6 +47,7 @@ def create_user_and_set_data(param_dict: dict):
                      "gender": 0,
                      "city": "Moscow"}
 
+# Для теста запросов к БД
 def read_json(file_name):
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
