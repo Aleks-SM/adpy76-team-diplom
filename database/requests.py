@@ -7,7 +7,6 @@ from database.db_dataclassess import ClientUser
 
 #Должна возращать ClientUser
 def get_user_data(user_id: int) -> ClientUser:
-    # engine = Database().create_conect()
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
 
