@@ -1,7 +1,5 @@
-from enum import Enum
 from vk_api.search import VKSearcherManyUsers, VKSearcherUser
 from vk_bot.user import VkUserSearch, VkUserClient
-from database.requests import get_user_blacklist
 
 
 class State:
@@ -10,7 +8,7 @@ class State:
             raise TypeError(f"Only children of '{cls.__name__}' may be instantiated")
         return super().__new__(cls)
 
-    def __init__(self, user_id):
+    def __init__(self, user_id: int):
         self.user_id = user_id
 
     def init(self):
@@ -33,5 +31,5 @@ class State:
         return await VKSearcherUser(VkUserClient(self.user_id)).get_interests()
 
     async def get_single_user_data(self) -> VkUserSearch:
-        return await VKSearcherUser(VkUserClient(self.user_id)).get_()
+        return await VKSearcherUser(VkUserClient(self.user_id)).vk_user_search_params()
 

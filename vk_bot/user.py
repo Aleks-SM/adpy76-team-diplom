@@ -59,6 +59,8 @@ class VkUserClient(VkUser):
             self.state = StateEnum.ASK_GENDER
         else:
             self.state = StateEnum.REGISTERED
+            asd = VkUserSearch(123)
+            asd.user_id = 213
 
 
 class VkUserSearch(VkUser):
