@@ -21,7 +21,7 @@ def get_user_data(user_id: int) -> ClientUser:
 
 
 # Должна возвращать сет из blocked_vk_user_id
-def get_user_blacklist() -> set[int]:
+def get_user_blacklist(user_id: int) -> set[int]:
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
     for query in session.query(User).join(Blacklist).filter(User.user_id == user_id).all():

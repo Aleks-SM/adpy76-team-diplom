@@ -13,3 +13,6 @@ class Talker:
     def text_and_vk_search_user_with_buttons(self, message: str, vk_user_data: VkUserSearch):
         pass
 
+    def gender_request_with_buttons(self, message: str):
+        pass
+
