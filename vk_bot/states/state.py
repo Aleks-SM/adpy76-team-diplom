@@ -32,8 +32,6 @@ class State:
     async def get_self_interests(self) -> set[str]:
         return await VKSearcherUser(VkUserClient(self.user_id)).get_interests()
 
-    def get_vk_user_interests(self) -> set[str]:
-        return VkSearchEngine(VkUserClient(self.user_id)).get_interests()
-
-    def
+    async def get_single_user_data(self) -> VkUserSearch:
+        return await VKSearcherUser(VkUserClient(self.user_id)).get_()
 

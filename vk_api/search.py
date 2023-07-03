@@ -95,7 +95,7 @@ class VKSearcherUser(VkSearcherEngine):
     async def get_interests(self) -> set[str]:
         pass
 
-    async def vk_user_search_params(self):
+    async def vk_user_search_params(self) -> VkUserSearch:
         user_params = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
         params = user_params[0]
         try:
