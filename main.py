@@ -1,4 +1,3 @@
-import sqlalchemy as sq
 from database.database import Database
 from database.requests import get_user_data
 
