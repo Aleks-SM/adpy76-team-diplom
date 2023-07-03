@@ -18,11 +18,11 @@ class State:
         return
 
     @staticmethod
-    def int_try_parse(number: str) -> (bool, int, str):
+    def int_try_parse(number: str) -> (bool, int):
         try:
-            return True, int(number.strip()), ""
+            return True, int(number.strip())
         except Exception as e:
-            return False, 0, "Пожалуйста, введите число"
+            return False, 0
 
     async def get_search_data(self) -> set[VkUserSearch]:
         return await VKSearcherManyUsers(VkUserClient(self.user_id)).search_vk_users_as_client_params()

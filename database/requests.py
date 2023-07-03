@@ -5,7 +5,7 @@ from database.database import Database
 from database.db_dataclassess import ClientUser
 
 
-#Должна возращать ClientUser
+#Должна возращать ClientUser, если данных нет, то пустые поля должны быть None
 def get_user_data(user_id: int) -> ClientUser:
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
@@ -30,6 +30,20 @@ def get_user_blacklist() -> set[int]:
     return query_result
 
 
-#Проверяет существует ли юзер
+# Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:
     pass
+
+
+# Добавляет данные в базу
+def set_user_data(user_id: int, param_dict: dict):
+    dict_example = {"age_min": 23}
+    dict_example2 = {"city": "Moscow"}
+
+
+# пола и города может не быть
+def create_user_and_set_data(param_dict: dict):
+    dict_example3 = {"user_id": 123,
+                     "gender": 0,
+                     "city": "Moscow"}
+
