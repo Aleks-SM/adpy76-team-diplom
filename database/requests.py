@@ -1,4 +1,4 @@
-from database.db_dataclassess import ClientUser
+import json
 from sqlalchemy.orm import sessionmaker
 from database.models import User, Favorite, Blacklist
 from database.database import Database
@@ -47,3 +47,18 @@ def create_user_and_set_data(param_dict: dict):
                      "gender": 0,
                      "city": "Moscow"}
 
+def read_json(file_name):
+    Session = sessionmaker(bind=Database().create_conect())
+    session = Session()
+
+    with open(file_name, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        for record in data:
+            model = {
+                'user': User,
+                'blacklist': Blacklist,
+                'favorite': Favorite,
+            }[record.get('model')]
+            session.add(model(user_id=record.get('pk'), **record.get('fields')))
+        session.commit()
+    session.close()
