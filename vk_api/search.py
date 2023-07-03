@@ -6,7 +6,7 @@ from pprint import pprint
 from dotenv import load_dotenv
 from vkbottle import API
 from database.database import Database
-from vk_bot.vk_bot import VkUserSearch, VkUserClient
+from vk_bot.user import VkUserSearch, VkUserClient
 
 
 def init_env():
@@ -56,7 +56,7 @@ class VKSearcherUser(VkSearcherEngine):
         self.photos = []
         self.related_photos = []
         self.interests = set
-        self.age = int
+        self.age = 0
         self.city = None
         self.sex = None
 
@@ -154,7 +154,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
             photos_lst.append(photo)
             return photos_lst
 
-    async def search_vk_users_as_client_params(self):
+    async def search_vk_users_as_client_params(self) -> set[VkUserSearch]:
         """Фунция осуществляет поиск по городу, полу, возрасту"""
         # делаем запрос в цикле, чтобы как-то обойти 1000 значений,
         # здесь можно по дате рождения сделать, тогда значений будет больше, но запрос будет долгим
@@ -199,6 +199,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
 
                     # user.related_photos = await self.get_related_photos(res.id)
                     self.result.append(user)
+        return set(self.result)
 
 
 async def test():

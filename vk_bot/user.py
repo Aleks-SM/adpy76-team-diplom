@@ -1,7 +1,7 @@
 from functools import total_ordering
 from enum import Enum
-from vk_bot.states.state import StateEnum
-from database.requests import get_user_data, check_user_exits
+from vk_bot.states.state_enum import StateEnum
+from database.requests import get_user_data, check_user_exits, get_user_blacklist
 
 
 class GenderEnum(Enum):
@@ -33,6 +33,7 @@ class VkUserClient(VkUser):
         self.gender = None
         self.state = StateEnum.ASK_AGE_MIN
         self.try_get_data()
+        self.blacklisted_users = set[int]
 
     def try_get_data(self):
         if check_user_exits(self.user_id):
@@ -42,6 +43,8 @@ class VkUserClient(VkUser):
             self.age_min = data.age_max
             self.city = data.city
             self.gender = GenderEnum(data.gender)
+            if data.state == StateEnum.REGISTERED:
+                self.blacklisted_users = get_user_blacklist()
 
     def check_next_state(self):
         if self.state == StateEnum.REGISTERED:
@@ -66,4 +69,5 @@ class VkUserSearch(VkUser):
         self.photos = []
         self.related_photos = []
         self.interests = set
-        self.age = int
+        self.age = 0
+        self.gender = 0
