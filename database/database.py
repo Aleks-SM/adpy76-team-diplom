@@ -1,4 +1,5 @@
 import os
+import sqlalchemy as sq
 from dotenv import load_dotenv
 from database.models import Base
 
@@ -29,7 +30,8 @@ class Database:
             self.bd_port,
             self.bd_name,
         )
-        return dsn
+        engine = sq.create_engine(dsn)
+        return engine
 
     def create_tables(self, engine):
         Base.metadata.drop_all(engine)
