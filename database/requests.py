@@ -17,6 +17,7 @@ def get_user_data(user_id: int) -> ClientUser:
                    gender=query.search_gender,
                    city=query.search_city,
                    state=query.state)
+    session.close()
     return self
 
 
@@ -62,11 +63,14 @@ def read_json(file_name):
     with open(file_name, 'r', encoding='utf-8') as f:
         data = json.load(f)
         for record in data:
-            model = {
-                'user': User,
-                'blacklist': Blacklist,
-                'favorite': Favorite,
-            }[record.get('model')]
-            session.add(model(user_id=record.get('pk'), **record.get('fields')))
+            if record.get('model') == 'user':
+                model = {'user': User, 'blacklist': Blacklist, 'favorite': Favorite}[record.get('model')]
+                session.add(model(user_id=record.get('pk'), **record.get('fields')))
+            if record.get('model') == 'blacklist':
+                model = {'user': User, 'blacklist': Blacklist, 'favorite': Favorite}[record.get('model')]
+                session.add(model(blacklist_id=record.get('pk'), **record.get('fields')))
+            if record.get('model') == 'favorite':
+                model = {'user': User, 'blacklist': Blacklist, 'favorite': Favorite}[record.get('model')]
+                session.add(model(favorite_id=record.get('pk'), **record.get('fields')))
         session.commit()
     session.close()
