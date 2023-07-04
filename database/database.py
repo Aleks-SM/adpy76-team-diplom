@@ -37,4 +37,3 @@ class Database:
     def create_tables(self, engine):
         Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
-
