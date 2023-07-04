@@ -1,0 +1,4 @@
+[
+  {"model": "user", "pk": 1, "fields": {"user_name": "qwer", "search_gender": 1, "search_age_min":  20, "search_age_max":  25, "search_city":  "Moscow", "state": 1}},
+  {"model": "user", "pk": 34, "fields": {"user_name": "asdf", "search_gender": 1, "search_age_min":  25, "search_age_max":  27, "search_city":  "Moscow", "state": 1}}
+]
