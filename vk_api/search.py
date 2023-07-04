@@ -48,9 +48,9 @@ class VkSearcherEngine:
 
 
 class VKSearcherUser(VkSearcherEngine):
-    def __init__(self, user_id, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user_id = user_id
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,  **kwargs)
+        # self.user_id = user_id
         self.name: str = ""
         self.profile_link: str = f"https://vk.com/id{self.user_id}"
         self.photos = []
@@ -93,7 +93,19 @@ class VKSearcherUser(VkSearcherEngine):
             self.related_photos.append(photo)
 
     async def get_interests(self) -> set[str]:
-        pass
+        data = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
+        params = data[0]
+        interests = {
+            params.interests,
+            params.about,
+            params.activities,
+            params.books,
+            params.games,
+            params.movies,
+            params.music,
+            params.tv
+        }
+        return interests
 
     async def vk_user_search_params(self) -> VkUserSearch:
         user_params = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
@@ -214,10 +226,10 @@ async def test():
     user_client.gender = 1
     user_client.state = 0
     user_searcher = VKSearcherManyUsers(user=user_client)
-
-    await user_searcher.search_vk_users_as_client_params()
-
-    pprint(user_searcher.result)
+    user_par = VKSearcherUser(user_id=382668981)
+    # await user_searcher.search_vk_users_as_client_params()
+    await user_par.vk_user_search_params()
+    print(user_par.interests)
 
 
 asyncio.run(test())
