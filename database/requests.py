@@ -70,13 +70,49 @@ def check_user_exits(user_id: int) -> bool:
 
 # Добавляет данные в базу
 def set_user_data(user_id: int, param_dict: dict):
-    dict_example = {"age_min": 23}
-    dict_example2 = {"city": "Moscow"}
-
+    # dict_example = {"age_min": 23}
+    # dict_example2 = {"city": "Moscow"}
+    Session = sessionmaker(bind=Database().create_conect())
+    session = Session()
+    if check_user_exits(param_dict.get("user_id")):
+        user = User(
+            user_name=param_dict.get("user_name"),
+            search_gender=param_dict.get("gender"),
+            search_age_min=param_dict.get("age_min"),
+            search_age_max=param_dict.get("age_max"),
+            search_city=param_dict.get("city"),
+            state=param_dict.get("state"),
+        )
+    else:
+        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "не существует в БД")
+        param_dict["user_id"] = user_id
+        create_user_and_set_data(param_dict)
+    session.close()
+    return res
 
 # пола и города может не быть
 def create_user_and_set_data(param_dict: dict):
-    dict_example3 = {"user_id": 123, "gender": 0, "city": "Moscow"}
+    # dict_example3 = {"user_id": 123, "gender": 0, "city": "Moscow"}
+    Session = sessionmaker(bind=Database().create_conect())
+    session = Session()
+    if not check_user_exits(param_dict.get("user_id")):
+        user = User(
+            user_id=param_dict.get("user_id"),
+            user_name=param_dict.get("user_name"),
+            search_gender=param_dict.get("gender"),
+            search_age_min=param_dict.get("age_min"),
+            search_age_max=param_dict.get("age_max"),
+            search_city=param_dict.get("city"),
+            state=param_dict.get("state"),
+        )
+        session.add(user)
+        session.commit()
+        if check_user_exits(param_dict.get("user_id")):
+            res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "добавлен в БД")
+    else:
+        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "уже ест в БД")
+    session.close()
+    return res
 
 
 # Для теста запросов к БД
