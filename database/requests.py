@@ -24,6 +24,11 @@ def get_user_data(user_id: int) -> ClientUser:
 def get_user_blacklist(user_id: int) -> set[int]:
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
+    # query = session.query(User, Blacklist)
+    # query = session.join(UserBlacklist, UserBlacklist.user_id == User.user_id)
+    # records = query.all()
+    # for user, blacklist in records:
+        
     for query in session.query(User, Blacklist).join(UserBlacklist).filter(UserBlacklist.user_id == User.user_id).all():
         query_result = {"user_id": query.user_id,
                        "blocked_vk_id": query.blocked_vk_user_id}
