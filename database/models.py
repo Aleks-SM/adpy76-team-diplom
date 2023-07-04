@@ -5,6 +5,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = "user"
 
@@ -16,6 +17,7 @@ class User(Base):
     search_city = Column(String(length=50))
     state = Column(Integer)
 
+
 class Favorite(Base):
     __tablename__ = "favorite"
 
@@ -24,6 +26,7 @@ class Favorite(Base):
     favorite_vk_user_id = Column(BigInteger, nullable=True)
 
     favorite = relationship(User, backref="user_fav")
+
 
 class Blacklist(Base):
     __tablename__ = "blacklist"

@@ -19,4 +19,3 @@ class Talker:
 
     def gender_request_with_buttons(self, message: str):
         pass
-

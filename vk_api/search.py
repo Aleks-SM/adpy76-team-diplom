@@ -24,26 +24,30 @@ class VkSearcherEngine:
 
     # Database().create_conect()
 
-    def __init__(self, user_id, user_api=API(os.getenv('user_token')), api=API(os.getenv('vk_token'))):
+    def __init__(
+        self,
+        user_id,
+        user_api=API(os.getenv("user_token")),
+        api=API(os.getenv("vk_token")),
+    ):
         self.user_id = user_id
         self.user_api = user_api
         self.api = api
         self.user_params = [
-            'first_name',
-            'last_name',
-            'sex',
-            'bdate',
-            'city',
-            'about',
-            'activities'
-            'first_name',
-            'last_name',
-            'books',
-            'games',
-            'interests',
-            'movies',
-            'music',
-            'tv',
+            "first_name",
+            "last_name",
+            "sex",
+            "bdate",
+            "city",
+            "about",
+            "activities" "first_name",
+            "last_name",
+            "books",
+            "games",
+            "interests",
+            "movies",
+            "music",
+            "tv",
         ]
 
 
@@ -60,13 +64,10 @@ class VKSearcherUser(VkSearcherEngine):
         self.city = None
         self.sex = None
 
-    async def get_users_photos(self, album_id='profile'):
+    async def get_users_photos(self, album_id="profile"):
         new_lst = []
         photos = await self.user_api.photos.get(
-            self.user_id,
-            album_id=album_id,
-            extended=True,
-            feed_type="photo"
+            self.user_id, album_id=album_id, extended=True, feed_type="photo"
         )
         lst = []
         for item in photos.items:
@@ -96,7 +97,9 @@ class VKSearcherUser(VkSearcherEngine):
             return photos_lst
 
     async def get_interests(self) -> set[str]:
-        data = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
+        data = await self.api.users.get(
+            user_ids=[self.user_id], fields=self.user_params
+        )
         params = data[0]
         interests = [
             str(params.about).split(","),
@@ -106,7 +109,7 @@ class VKSearcherUser(VkSearcherEngine):
             str(params.interests).split(","),
             str(params.movies).split(","),
             str(params.music).split(","),
-            str(params.tv).split(",")
+            str(params.tv).split(","),
         ]
         lst = list()
         for _ in interests:
@@ -119,19 +122,24 @@ class VKSearcherUser(VkSearcherEngine):
         return set(lst)
 
     async def vk_user_search_params(self) -> VkUserSearch:
-        user_params = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
+        user_params = await self.api.users.get(
+            user_ids=[self.user_id], fields=self.user_params
+        )
         params = user_params[0]
         try:
-            datetime.strptime(user_params[0].bdate, '%d.%m.%Y').date()
+            datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date()
             self.city = user_params[0].city.title
         except ValueError:
             self.age = None
             self.city = None
         else:
-            self.age = datetime.now().year - datetime.strptime(user_params[0].bdate, '%d.%m.%Y').date().year
+            self.age = (
+                datetime.now().year
+                - datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date().year
+            )
             self.city = user_params[0].city.title
         finally:
-            self.name = f'{user_params[0].first_name} {user_params[0].last_name}'
+            self.name = f"{user_params[0].first_name} {user_params[0].last_name}"
             self.sex = user_params[0].sex.value
             interests = [
                 str(params.about).split(","),
@@ -141,7 +149,7 @@ class VKSearcherUser(VkSearcherEngine):
                 str(params.interests).split(","),
                 str(params.movies).split(","),
                 str(params.music).split(","),
-                str(params.tv).split(",")
+                str(params.tv).split(","),
             ]
             lst = list()
             for _ in interests:
@@ -173,11 +181,13 @@ class VKSearcherManyUsers(VkSearcherEngine):
         self.user = user
         self.result: list[VkUserSearch] = []
 
-    async def get_photos_searched_users(self, searched_user_id, album_id='profile'):
+    async def get_photos_searched_users(self, searched_user_id, album_id="profile"):
         """Функция ищет три или менее самых лайкнутых фотографий из альбома и помещает в список словарей"""
 
         new_lst = []
-        photos = await self.user_api.photos.get(searched_user_id, album_id=album_id, extended=True, feed_type="photo")
+        photos = await self.user_api.photos.get(
+            searched_user_id, album_id=album_id, extended=True, feed_type="photo"
+        )
         lst = []
         for item in photos.items:
             photo = None
@@ -214,7 +224,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
                 age_from=age,
                 age_to=age,
                 has_photo=True,
-                is_closed=False
+                is_closed=False,
             )
 
             for res in peoples.items:
@@ -222,24 +232,27 @@ class VKSearcherManyUsers(VkSearcherEngine):
                     user = VkUserSearch(user_id=res.id)
                     try:
                         if isinstance(res.bdate, str):
-                            datetime.strptime(res.bdate, '%d.%m.%Y').date()
+                            datetime.strptime(res.bdate, "%d.%m.%Y").date()
                     except ValueError or TypeError:
                         user.age = None
                     else:
                         if isinstance(res.bdate, str):
-                            user.age = datetime.now().year - datetime.strptime(res.bdate, '%d.%m.%Y').date().year
+                            user.age = (
+                                datetime.now().year
+                                - datetime.strptime(res.bdate, "%d.%m.%Y").date().year
+                            )
                         else:
                             user.age = None
 
-                    user.name = f'{res.first_name} {res.last_name}'
+                    user.name = f"{res.first_name} {res.last_name}"
                     interests = [
-                        res.about.split(','),
-                        res.activity.split(','),
-                        res.books.split(','),
-                        res.games.split(','),
-                        res.interests.split(','),
-                        res.movies.split(','),
-                        res.music.split(',')
+                        res.about.split(","),
+                        res.activity.split(","),
+                        res.books.split(","),
+                        res.games.split(","),
+                        res.interests.split(","),
+                        res.movies.split(","),
+                        res.music.split(","),
                     ]
                     lst = list()
                     for _ in interests:
