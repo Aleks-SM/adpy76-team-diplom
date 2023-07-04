@@ -25,18 +25,24 @@ def get_user_data(user_id: int) -> ClientUser:
 def get_user_blacklist(user_id: int) -> set[int]:
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
-    # query = session.query(User, Blacklist)
-    # query = session.join(UserBlacklist, UserBlacklist.user_id == User.user_id)
-    # records = query.all()
-    # for user, blacklist in records:
-        
-    for query in session.query(User, Blacklist).join(UserBlacklist).filter(UserBlacklist.user_id == User.user_id).all():
-        query_result = {"user_id": query.user_id,
-                       "blocked_vk_id": query.blocked_vk_user_id}
-    return query_result
+    query = session.query(Blacklist)
+    records = query.all()
+    res = []
+    for blacklist in records:
+        if blacklist.user_id == user_id:
+            res.append(blacklist.blocked_vk_user_id)
+    return set(res)
 
 def get_user_favorites(user_id: int) -> set[int]:
-    pass
+    Session = sessionmaker(bind=Database().create_conect())
+    session = Session()
+    query = session.query(Favorite)
+    records = query.all()
+    res = []
+    for favorite in records:
+        if favorite.user_id == user_id:
+            res.append(favorite.favorite_vk_user_id)
+    return set(res)
 
 # Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:
