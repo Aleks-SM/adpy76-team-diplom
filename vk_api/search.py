@@ -83,31 +83,40 @@ class VKSearcherUser(VkSearcherEngine):
 
         if new_lst:
             self.photos = new_lst
-        return self.photos
+        return new_lst
 
     async def get_related_photos(self):
+        photos_lst = []
         photos = await self.user_api.photos.get_user_photos(self.user_id)
         for item in photos.items:
             photo = None
             for size in item.sizes:
                 photo = size.url
-            self.related_photos.append(photo)
-        return self.related_photos
+            photos_lst.append(photo)
+            return photos_lst
 
     async def get_interests(self) -> set[str]:
         data = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
         params = data[0]
-        interests = {
-            params.interests,
-            params.about,
-            params.activities,
-            params.books,
-            params.games,
-            params.movies,
-            params.music,
-            params.tv
-        }
-        return interests
+        interests = [
+            str(params.about).split(","),
+            str(params.activities).split(","),
+            str(params.books).split(","),
+            str(params.games).split(","),
+            str(params.interests).split(","),
+            str(params.movies).split(","),
+            str(params.music).split(","),
+            str(params.tv).split(",")
+        ]
+        lst = list()
+        for _ in interests:
+            if len(_) == 1:
+                lst.append(*_)
+            else:
+                for i in _:
+                    lst.append(*i)
+
+        return set(lst)
 
     async def vk_user_search_params(self) -> VkUserSearch:
         user_params = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
@@ -124,23 +133,33 @@ class VKSearcherUser(VkSearcherEngine):
         finally:
             self.name = f'{user_params[0].first_name} {user_params[0].last_name}'
             self.sex = user_params[0].sex.value
-            self.interests = (
-                params.about,
-                params.activities,
-                params.books,
-                params.games,
-                params.interests,
-                params.movies,
-                params.music,
-                params.tv
-            )
-            self.photos = self.get_users_photos()
-            self.related_photos = self.get_related_photos()
+            interests = [
+                str(params.about).split(","),
+                str(params.activities).split(","),
+                str(params.books).split(","),
+                str(params.games).split(","),
+                str(params.interests).split(","),
+                str(params.movies).split(","),
+                str(params.music).split(","),
+                str(params.tv).split(",")
+            ]
+            lst = list()
+            for _ in interests:
+                if len(_) == 1:
+                    lst.append(*_)
+                else:
+                    for i in _:
+                        lst.append(*i)
+            self.interests = set(lst)
+            photos = await self.get_users_photos()
+            related_photos = await self.get_related_photos()
 
             user = VkUserSearch(self.user_id)
             user.name = self.name
-            user.photos = self.photos
-            user.related_photos = self.related_photos
+            user.photos = photos
+            self.photos = photos
+            user.related_photos = related_photos
+            self.related_photos = related_photos
             user.interests = self.interests
             user.age = self.age
             user.gender = self.sex
@@ -213,15 +232,23 @@ class VKSearcherManyUsers(VkSearcherEngine):
                             user.age = None
 
                     user.name = f'{res.first_name} {res.last_name}'
-                    user.interests = (
-                        res.about,
-                        res.activity,
-                        res.books,
-                        res.games,
-                        res.interests,
-                        res.movies,
-                        res.music
-                    )
+                    interests = [
+                        res.about.split(','),
+                        res.activity.split(','),
+                        res.books.split(','),
+                        res.games.split(','),
+                        res.interests.split(','),
+                        res.movies.split(','),
+                        res.music.split(',')
+                    ]
+                    lst = list()
+                    for _ in interests:
+                        if len(_) == 1:
+                            lst.append(*_)
+                        else:
+                            for i in _:
+                                lst.append(*i)
+                    user.interests = set(lst)
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_photos_searched_users(res.id)
                     user.related_photos = await self.get_related_photos(res.id)
