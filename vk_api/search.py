@@ -49,7 +49,7 @@ class VkSearcherEngine:
 
 class VKSearcherUser(VkSearcherEngine):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args,  **kwargs)
+        super().__init__(*args, **kwargs)
         # self.user_id = user_id
         self.name: str = ""
         self.profile_link: str = f"https://vk.com/id{self.user_id}"
@@ -83,6 +83,7 @@ class VKSearcherUser(VkSearcherEngine):
 
         if new_lst:
             self.photos = new_lst
+        return self.photos
 
     async def get_related_photos(self):
         photos = await self.user_api.photos.get_user_photos(self.user_id)
@@ -91,6 +92,7 @@ class VKSearcherUser(VkSearcherEngine):
             for size in item.sizes:
                 photo = size.url
             self.related_photos.append(photo)
+        return self.related_photos
 
     async def get_interests(self) -> set[str]:
         data = await self.api.users.get(user_ids=[self.user_id], fields=self.user_params)
@@ -132,6 +134,18 @@ class VKSearcherUser(VkSearcherEngine):
                 params.music,
                 params.tv
             )
+            self.photos = self.get_users_photos()
+            self.related_photos = self.get_related_photos()
+
+            user = VkUserSearch(self.user_id)
+            user.name = self.name
+            user.photos = self.photos
+            user.related_photos = self.related_photos
+            user.interests = self.interests
+            user.age = self.age
+            user.gender = self.sex
+
+        return user
 
 
 class VKSearcherManyUsers(VkSearcherEngine):
@@ -185,8 +199,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
             )
 
             for res in peoples.items:
-
-                if not res.is_closed:  # and res.id not in self.user.black_list
+                if not res.is_closed and res.id not in self.user.blacklisted_users:
                     user = VkUserSearch(user_id=res.id)
                     try:
                         if isinstance(res.bdate, str):
@@ -211,8 +224,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
                     )
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_photos_searched_users(res.id)
-
-                    # user.related_photos = await self.get_related_photos(res.id)
+                    user.related_photos = await self.get_related_photos(res.id)
                     self.result.append(user)
         return set(self.result)
 
