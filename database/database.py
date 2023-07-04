@@ -1,5 +1,5 @@
 import os
-import sqlalchemy as sq
+from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from database.models import Base
 
@@ -31,7 +31,7 @@ class Database:
             self.bd_port,
             self.bd_name,
         )
-        engine = sq.create_engine(dsn)
+        engine = create_engine(dsn)
         return engine
 
     def create_tables(self, engine):
