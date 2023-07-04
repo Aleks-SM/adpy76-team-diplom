@@ -46,8 +46,14 @@ def get_user_favorites(user_id: int) -> set[int]:
 
 # Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:
-    pass
-
+    Session = sessionmaker(bind=Database().create_conect())
+    session = Session()
+    query = session.query(User)
+    records = query.all()
+    for record in records:
+        if record.user_id == user_id:
+            return True
+    return False
 
 # Добавляет данные в базу
 def set_user_data(user_id: int, param_dict: dict):
