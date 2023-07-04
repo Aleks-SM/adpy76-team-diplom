@@ -1,0 +1,2 @@
+class UserSearchData:
+    def(self, )

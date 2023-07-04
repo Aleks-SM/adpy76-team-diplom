@@ -6,7 +6,7 @@ from pprint import pprint
 from dotenv import load_dotenv
 from vkbottle import API
 from database.database import Database
-from vk_bot.user import VkUserSearch, VkUserClient
+from vk_bot.user.user import VkUserSearch, VkUserClient
 
 
 def init_env():

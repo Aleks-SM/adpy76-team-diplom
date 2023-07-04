@@ -1,32 +1,25 @@
-from queue import Queue
-from vk_bot.user import VkUserClient, VkUserSearch
-from vk_bot.states.state_enum import StateEnum
+from vk_bot.states.enums.state_enum import StateEnum
 from vk_bot.states.dialog_states.init_user_state import InitUserState
-
-
-class ActionEnum:
-    PRESSED_NEXT_BUTTON: 0
-    PRESSED_SHOW_FAVORITES: 1
-    PRESSED_BLOCK_USER: 2
-    PLAIN_TEXT: 3
+from vk_bot.enums.menu_button_enums import MenuButtonEnum
+from vk_bot.search_cache.search_cache import SearchCache
 
 
 class VkBot:
     def __init__(self):
-        self.current_queues = {}
+        self.search_cache = SearchCache()
 
-    def action(self, user_id: int, action_type: ActionEnum, message=""):
+    def action(self, user_id: int, action_type: MenuButtonEnum, message=""):
         state = self.perform_user_action(user_id, action_type, message)
 
-    def perform_user_action(self, user_id, action_type: ActionEnum, message):
+    def perform_user_action(self, user_id, action_type: MenuButtonEnum, message):
         match action_type:
-            case ActionEnum.PRESSED_NEXT_BUTTON:
+            case MenuButtonEnum.NEXT:
                 pass
-            case ActionEnum.PRESSED_SHOW_FAVORITES:
+            case MenuButtonEnum.SHOW_FAVORITES:
                 pass
-            case ActionEnum.PRESSED_BLOCK_USER:
+            case MenuButtonEnum.BLOCK_USER:
                 pass
-            case ActionEnum.PLAIN_TEXT:
+            case MenuButtonEnum.PLAIN_TEXT:
                 return self.plain_text_action(user_id, message)
 
     def plain_text_action(self, user_id, message):

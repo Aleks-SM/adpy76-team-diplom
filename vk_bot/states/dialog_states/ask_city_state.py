@@ -1,27 +1,26 @@
 from vk_bot.states.state import State
 from vk_api.talker import Talker
 from vk_bot.user.user import VkUserClient
+from vk_api.tools import check_if_city_exists
 from database.requests import set_user_data
 
 
-class AskAgeMinState(State):
+class AskCityState(State):
     def __init__(self, user_id: int):
         super().__init__(user_id)
 
     def init(self):
-        text = "Введите минимальный желаемый возраст"
+        text = "Введите ваш город"
         Talker(self.user_id).plain_text_without_buttons(text)
 
     def feedback(self, text=""):
         client = VkUserClient(self.user_id)
-        is_parsed, data = self.int_try_parse(text)
-        if is_parsed and 14 < data < 100:
-            set_user_data(self.user_id, {"age_min": data})
+        if check_if_city_exists(text):
+            set_user_data(self.user_id, {"city": text})
             client.try_get_data()
             client.check_next_state()
             return client.state()
         else:
-            text = "Пожалуйста, введите корректный возраст"
+            text = "Упс, не удалось найти указанный город, попробуйте снова"
             Talker(self.user_id).plain_text_without_buttons(text)
             return None
-

@@ -1,5 +1,5 @@
 from vk_api.search import VKSearcherManyUsers, VKSearcherUser
-from vk_bot.user import VkUserSearch, VkUserClient
+from vk_bot.user.user import VkUserSearch, VkUserClient
 
 
 class State:
@@ -24,12 +24,24 @@ class State:
         except Exception as e:
             return False, 0
 
-    async def get_search_data(self) -> set[VkUserSearch]:
+    def try_parse_gender(self, gender: str):
+        is_parsed, gender_int = self.int_try_parse(gender)
+        if is_parsed and 0 <= gender_int <= 2:
+            return True, gender_int
+        else:
+            return False, 0
+
+    async def get_search_data(self) -> list[VkUserSearch]:
         return await VKSearcherManyUsers(VkUserClient(self.user_id)).search_vk_users_as_client_params()
 
     async def get_self_interests(self) -> set[str]:
         return await VKSearcherUser(VkUserClient(self.user_id)).get_interests()
 
-    async def get_single_user_data(self) -> VkUserSearch:
-        return await VKSearcherUser(VkUserClient(self.user_id)).vk_user_search_params()
+    @staticmethod
+    async def get_single_user_data(user_id: int) -> VkUserSearch:
+        return await VKSearcherUser(VkUserClient(user_id)).vk_user_search_params()
+
+
+
+
 

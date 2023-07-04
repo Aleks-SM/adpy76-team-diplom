@@ -34,6 +34,8 @@ def get_user_blacklist(user_id: int) -> set[int]:
                        "blocked_vk_id": query.blocked_vk_user_id}
     return query_result
 
+def get_user_favorites(user_id: int) -> set[int]:
+    pass
 
 # Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:

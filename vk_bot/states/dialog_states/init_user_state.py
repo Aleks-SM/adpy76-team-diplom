@@ -1,8 +1,8 @@
 from vk_bot.states.state import State
-from vk_api.dialog import Talker
-from vk_bot.user import VkUserClient
+from vk_api.talker import Talker
+from vk_bot.user.user import VkUserClient
 from database.requests import create_user_and_set_data
-from vk_api.search import VkUserSearch
+from vk_api.search import VKSearcherUser
 
 
 class InitUserState(State):
@@ -22,7 +22,7 @@ class InitUserState(State):
         return client.state()
 
     def initiate_user(self):
-        gender, city = VkUserSearch(self.user_id).get_info()
+        gender, city = VKSearcherUser(self.user_id).get_info()
         data = {"user_id": self.user_id}
         if gender is not None:
             data["gender"] = gender
