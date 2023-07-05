@@ -6,4 +6,3 @@ class ClientUser:
         self.gender = gender
         self.city = city
         self.state = state
-

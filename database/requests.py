@@ -1,5 +1,4 @@
 import json
-from sqlalchemy.orm import sessionmaker
 from database.models import User, Favorite, Blacklist
 from database.database import Database
 from database.db_dataclassess import ClientUser
@@ -7,8 +6,7 @@ from database.db_dataclassess import ClientUser
 
 # Должна возращать ClientUser, если данных нет, то пустые поля должны быть None
 def get_user_data(user_id: int) -> ClientUser:
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
+    session = Database().create_session()
 
     if check_user_exits(user_id):
         for query in session.query(User).filter(User.user_id == user_id).all():
@@ -30,8 +28,7 @@ def get_user_data(user_id: int) -> ClientUser:
 
 # Должна возвращать сет из blocked_vk_user_id
 def get_user_blacklist(user_id: int) -> set[int]:
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
+    session = Database().create_session()
     query = session.query(Blacklist)
     records = query.all()
     res = []
@@ -43,8 +40,7 @@ def get_user_blacklist(user_id: int) -> set[int]:
 
 
 def get_user_favorites(user_id: int) -> set[int]:
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
+    session = Database().create_session()
     query = session.query(Favorite)
     records = query.all()
     res = []
@@ -57,39 +53,39 @@ def get_user_favorites(user_id: int) -> set[int]:
 
 # Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
-    query = session.query(User)
-    records = query.all()
-    for record in records:
-        if record.user_id == user_id:
-            return True
+    session = Database().create_session()
+    query = session.query(User).filter(User.user_id == user_id).first()
+    if query != None:
+        res = True
+    else:
+        res = False
     session.close()
-    return False
+    return res
 
 
 # Добавляет данные в базу
 def set_user_data(user_id: int, param_dict: dict):
     # dict_example = {"age_min": 23}
     # dict_example2 = {"city": "Moscow"}
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
-    if check_user_exits(user_id):
-        user = User(
-            user_id=user_id,
-            user_name=param_dict.get("user_name"),
-            search_gender=param_dict.get("gender"),
-            search_age_min=param_dict.get("age_min"),
-            search_age_max=param_dict.get("age_max"),
-            search_city=param_dict.get("city"),
-            state=param_dict.get("state"),
-        )
-        session.commit()
+    session = Database().create_session()
+    query = session.query(User).filter(User.user_id == user_id).first()
+    if query != None:
+        if param_dict.get("gender") != None:
+            query.search_gender = param_dict.get("gender")
+        elif param_dict.get("city") != None:
+            query.search_city = param_dict.get("city")
+        elif param_dict.get("age_min") != None:
+            query.search_age_min = param_dict.get("age_min")
+        elif param_dict.get("age_max") != None:
+            query.search_age_max = param_dict.get("age_max")
+        elif param_dict.get("user_name") != None:
+            query.user_name = param_dict.get("user_name")
         res = "{} {} {}".format("Данные пользователя с id:", user_id, "обновлены")
     else:
         res = "{} {} {}".format("Пользователь с id:", user_id, "не существует в БД")
         # param_dict["user_id"] = user_id
         # create_user_and_set_data(param_dict)
+    session.commit()
     session.close()
     return res
 
@@ -97,8 +93,7 @@ def set_user_data(user_id: int, param_dict: dict):
 # пола и города может не быть
 def create_user_and_set_data(param_dict: dict):
     # dict_example3 = {"user_id": 123, "gender": 0, "city": "Moscow"}
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
+    session = Database().create_session()
     if not check_user_exits(param_dict.get("user_id")):
         user = User(
             user_id=param_dict.get("user_id"),
@@ -125,8 +120,7 @@ def create_user_and_set_data(param_dict: dict):
 
 # Для теста запросов к БД
 def read_json(file_name):
-    Session = sessionmaker(bind=Database().create_conect())
-    session = Session()
+    session = Database().create_session()
 
     with open(file_name, "r", encoding="utf-8") as f:
         data = json.load(f)

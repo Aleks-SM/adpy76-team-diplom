@@ -1,5 +1,6 @@
 import os
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from database.models import Base
 
@@ -33,6 +34,10 @@ class Database:
         )
         engine = create_engine(dsn)
         return engine
+
+    def create_session(self):
+        Session = sessionmaker(bind=self.create_conect())
+        return Session()
 
     def create_tables(self, engine):
         Base.metadata.drop_all(engine)
