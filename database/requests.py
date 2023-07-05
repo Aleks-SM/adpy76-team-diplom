@@ -82,7 +82,7 @@ def set_user_data(user_id: int, param_dict: dict):
             search_age_min=param_dict.get("age_min"),
             search_age_max=param_dict.get("age_max"),
             search_city=param_dict.get("city"),
-            state=param_dict.get("state")
+            state=param_dict.get("state"),
         )
         session.commit()
         res = "{} {} {}".format("Данные пользователя с id:", user_id, "обновлены")
@@ -92,6 +92,7 @@ def set_user_data(user_id: int, param_dict: dict):
         # create_user_and_set_data(param_dict)
     session.close()
     return res
+
 
 # пола и города может не быть
 def create_user_and_set_data(param_dict: dict):
@@ -106,14 +107,18 @@ def create_user_and_set_data(param_dict: dict):
             search_age_min=param_dict.get("age_min"),
             search_age_max=param_dict.get("age_max"),
             search_city=param_dict.get("city"),
-            state=param_dict.get("state")
+            state=param_dict.get("state"),
         )
         session.add(user)
         session.commit()
         if check_user_exits(param_dict.get("user_id")):
-            res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "добавлен в БД")
+            res = "{} {} {}".format(
+                "Пользователь с id:", param_dict.get("user_id"), "добавлен в БД"
+            )
     else:
-        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "уже есть в БД")
+        res = "{} {} {}".format(
+            "Пользователь с id:", param_dict.get("user_id"), "уже есть в БД"
+        )
     session.close()
     return res
 
