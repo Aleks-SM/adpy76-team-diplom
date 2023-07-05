@@ -10,10 +10,10 @@ class User(Base):
     __tablename__ = "user"
 
     user_id = Column(BigInteger, primary_key=True)
-    user_name = Column(String(length=50), unique=True)
+    user_name = Column(String(length=50))
     search_gender = Column(Integer)
-    search_age_min = Column(Integer, nullable=False)
-    search_age_max = Column(Integer, nullable=False)
+    search_age_min = Column(Integer)
+    search_age_max = Column(Integer)
     search_city = Column(String(length=50))
     state = Column(Integer)
 

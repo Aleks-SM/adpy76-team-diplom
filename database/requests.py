@@ -74,19 +74,22 @@ def set_user_data(user_id: int, param_dict: dict):
     # dict_example2 = {"city": "Moscow"}
     Session = sessionmaker(bind=Database().create_conect())
     session = Session()
-    if check_user_exits(param_dict.get("user_id")):
+    if check_user_exits(user_id):
         user = User(
+            user_id=user_id,
             user_name=param_dict.get("user_name"),
             search_gender=param_dict.get("gender"),
             search_age_min=param_dict.get("age_min"),
             search_age_max=param_dict.get("age_max"),
             search_city=param_dict.get("city"),
-            state=param_dict.get("state"),
+            state=param_dict.get("state")
         )
+        session.commit()
+        res = "{} {} {}".format("Данные пользователя с id:", user_id, "обновлены")
     else:
-        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "не существует в БД")
-        param_dict["user_id"] = user_id
-        create_user_and_set_data(param_dict)
+        res = "{} {} {}".format("Пользователь с id:", user_id, "не существует в БД")
+        # param_dict["user_id"] = user_id
+        # create_user_and_set_data(param_dict)
     session.close()
     return res
 
@@ -103,14 +106,14 @@ def create_user_and_set_data(param_dict: dict):
             search_age_min=param_dict.get("age_min"),
             search_age_max=param_dict.get("age_max"),
             search_city=param_dict.get("city"),
-            state=param_dict.get("state"),
+            state=param_dict.get("state")
         )
         session.add(user)
         session.commit()
         if check_user_exits(param_dict.get("user_id")):
             res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "добавлен в БД")
     else:
-        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "уже ест в БД")
+        res = "{} {} {}".format("Пользователь с id:", param_dict.get("user_id"), "уже есть в БД")
     session.close()
     return res
 
