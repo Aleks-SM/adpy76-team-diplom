@@ -1,8 +1,11 @@
 import asyncio
 import os
+import re
 from datetime import datetime
 from pprint import pprint
+from collections import Counter
 
+import pymorphy2
 from dotenv import load_dotenv
 from vkbottle import API
 from database.database import Database
@@ -25,10 +28,10 @@ class VkSearcherEngine:
     # Database().create_conect()
 
     def __init__(
-        self,
-        user_id,
-        user_api=API(os.getenv("user_token")),
-        api=API(os.getenv("vk_token")),
+            self,
+            user_id,
+            user_api=API(os.getenv("user_token")),
+            api=API(os.getenv("vk_token")),
     ):
         self.user_id = user_id
         self.user_api = user_api
@@ -50,6 +53,32 @@ class VkSearcherEngine:
             "tv",
         ]
 
+    async def parse_user_wall(self, searched_user_id, owners_filter='owner'):
+        strings = await self.user_api.wall.get(searched_user_id, filter=owners_filter)
+        result_string = []
+        morph = pymorphy2.MorphAnalyzer()
+        functors_pos = {'INTJ', 'PRCL', 'CONJ', 'PREP', 'VERB', 'INFN', 'ADJF', 'ADJS', 'GRND', 'PRTF', 'PRTS', 'NPRO',
+                        'COMP', 'ADVB'}
+
+        for string in strings.items:
+            cleanr = re.compile(r'[^А-Яа-яЁёA-Za-z]')
+            clean_text = re.sub(cleanr, ' ', string.text)
+            clean_text_without_spaces = re.sub('\s{2,}', ' ', clean_text)
+
+            clean_text_without_spaces.split(' ')
+            text = clean_text_without_spaces.lower().lstrip().rstrip()
+
+            words = text.split(' ')
+            for word in words:
+                if morph.parse(word)[0].tag.POS not in functors_pos:
+                    f = ''
+                    m = morph.parse(word)[0]
+                    if len(m) > 1:
+                        f = f + m.normal_form
+                    result_string.append(f)
+
+        return set(dict(Counter(result_string).most_common(20)).keys())
+
 
 class VKSearcherUser(VkSearcherEngine):
     def __init__(self, *args, **kwargs):
@@ -64,10 +93,10 @@ class VKSearcherUser(VkSearcherEngine):
         self.city = None
         self.sex = None
 
-    async def get_users_photos(self, album_id="profile"):
+    async def get_users_photos(self, searched_user_id, album_id="profile"):
         new_lst = []
         photos = await self.user_api.photos.get(
-            self.user_id, album_id=album_id, extended=True, feed_type="photo"
+            searched_user_id, album_id=album_id, extended=True, feed_type="photo"
         )
         lst = []
         for item in photos.items:
@@ -86,9 +115,9 @@ class VKSearcherUser(VkSearcherEngine):
             self.photos = new_lst
         return new_lst
 
-    async def get_related_photos(self):
+    async def get_related_photos(self, searched_user_id):
         photos_lst = []
-        photos = await self.user_api.photos.get_user_photos(self.user_id)
+        photos = await self.user_api.photos.get_user_photos(searched_user_id)
         for item in photos.items:
             photo = None
             for size in item.sizes:
@@ -134,8 +163,8 @@ class VKSearcherUser(VkSearcherEngine):
             self.city = None
         else:
             self.age = (
-                datetime.now().year
-                - datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date().year
+                    datetime.now().year
+                    - datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date().year
             )
             self.city = user_params[0].city.title
         finally:
@@ -159,8 +188,8 @@ class VKSearcherUser(VkSearcherEngine):
                     for i in _:
                         lst.append(*i)
             self.interests = set(lst)
-            photos = await self.get_users_photos()
-            related_photos = await self.get_related_photos()
+            photos = await self.get_users_photos(self.user_id)
+            related_photos = await self.get_related_photos(self.user_id)
 
             user = VkUserSearch(self.user_id)
             user.name = self.name
@@ -175,42 +204,42 @@ class VKSearcherUser(VkSearcherEngine):
         return user
 
 
-class VKSearcherManyUsers(VkSearcherEngine):
+class VKSearcherManyUsers(VKSearcherUser):
     def __init__(self, user: VkUserClient, *args, **kwargs):
         super().__init__(user, *args, **kwargs)
         self.user = user
         self.result: list[VkUserSearch] = []
 
-    async def get_photos_searched_users(self, searched_user_id, album_id="profile"):
-        """Функция ищет три или менее самых лайкнутых фотографий из альбома и помещает в список словарей"""
-
-        new_lst = []
-        photos = await self.user_api.photos.get(
-            searched_user_id, album_id=album_id, extended=True, feed_type="photo"
-        )
-        lst = []
-        for item in photos.items:
-            photo = None
-            for size in item.sizes:
-                photo = size.url
-            lst.append((item.likes.count, photo))
-        if len(lst) > 3:
-            lst = sorted(lst, key=lambda x: x[0], reverse=True)[:2]
-        for i in lst:
-            new_lst.append(i[1])
-        if new_lst:
-            return new_lst
-
-    async def get_related_photos(self, searched_user_id):
-        """Получаем связанные с пользователем фотографии. Требуются дополнительные права"""
-        photos_lst = []
-        photos = await self.user_api.photos.get_user_photos(searched_user_id)
-        for item in photos.items:
-            photo = None
-            for size in item.sizes:
-                photo = size.url
-            photos_lst.append(photo)
-            return photos_lst
+    # async def get_photos_searched_users(self, searched_user_id, album_id="profile"):
+    #     """Функция ищет три или менее самых лайкнутых фотографий из альбома и помещает в список словарей"""
+    #
+    #     new_lst = []
+    #     photos = await self.user_api.photos.get(
+    #         searched_user_id, album_id=album_id, extended=True, feed_type="photo"
+    #     )
+    #     lst = []
+    #     for item in photos.items:
+    #         photo = None
+    #         for size in item.sizes:
+    #             photo = size.url
+    #         lst.append((item.likes.count, photo))
+    #     if len(lst) > 3:
+    #         lst = sorted(lst, key=lambda x: x[0], reverse=True)[:2]
+    #     for i in lst:
+    #         new_lst.append(i[1])
+    #     if new_lst:
+    #         return new_lst
+    #
+    # async def get_related_photos(self, searched_user_id):
+    #     """Получаем связанные с пользователем фотографии. Требуются дополнительные права"""
+    #     photos_lst = []
+    #     photos = await self.user_api.photos.get_user_photos(searched_user_id)
+    #     for item in photos.items:
+    #         photo = None
+    #         for size in item.sizes:
+    #             photo = size.url
+    #         photos_lst.append(photo)
+    #         return photos_lst
 
     async def search_vk_users_as_client_params(self) -> set[VkUserSearch]:
         """Фунция осуществляет поиск по городу, полу, возрасту"""
@@ -238,8 +267,8 @@ class VKSearcherManyUsers(VkSearcherEngine):
                     else:
                         if isinstance(res.bdate, str):
                             user.age = (
-                                datetime.now().year
-                                - datetime.strptime(res.bdate, "%d.%m.%Y").date().year
+                                    datetime.now().year
+                                    - datetime.strptime(res.bdate, "%d.%m.%Y").date().year
                             )
                         else:
                             user.age = None
@@ -263,7 +292,7 @@ class VKSearcherManyUsers(VkSearcherEngine):
                                 lst.append(*i)
                     user.interests = set(lst)
                     await asyncio.sleep(0.34)
-                    user.photos = await self.get_photos_searched_users(res.id)
+                    user.photos = await self.get_users_photos(res.id)
                     user.related_photos = await self.get_related_photos(res.id)
                     self.result.append(user)
         return set(self.result)
@@ -277,11 +306,13 @@ async def test():
     user_client.age_max = 30
     user_client.gender = 1
     user_client.state = 0
+
     user_searcher = VKSearcherManyUsers(user=user_client)
-    user_par = VKSearcherUser(user_id=382668981)
+    user_par = VKSearcherUser(user_id=1)
     # await user_searcher.search_vk_users_as_client_params()
-    await user_par.vk_user_search_params()
-    print(user_par.interests)
+    # await user_par.vk_user_search_params()
+    # print(user_par.interests)
+    print(await user_par.parse_user_wall(user_par.user_id))
 
 
 asyncio.run(test())
