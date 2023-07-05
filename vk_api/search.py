@@ -1,11 +1,12 @@
 import asyncio
 import os
+import pymorphy2
 import re
 from datetime import datetime
 from pprint import pprint
 from collections import Counter
 
-import pymorphy2
+
 from dotenv import load_dotenv
 from vkbottle import API
 from database.database import Database
@@ -76,7 +77,6 @@ class VkSearcherEngine:
                     if len(m) > 1:
                         f = f + m.normal_form
                     result_string.append(f)
-
         return set(dict(Counter(result_string).most_common(20)).keys())
 
 
@@ -104,13 +104,10 @@ class VKSearcherUser(VkSearcherEngine):
             for size in item.sizes:
                 photo = size.url
             lst.append((item.likes.count, photo))
-
         if len(lst) > 3:
             lst = sorted(lst, key=lambda x: x[0], reverse=True)[:2]
-
         for i in lst:
             new_lst.append(i[1])
-
         if new_lst:
             self.photos = new_lst
         return new_lst
@@ -123,13 +120,9 @@ class VKSearcherUser(VkSearcherEngine):
             for size in item.sizes:
                 photo = size.url
             photos_lst.append(photo)
-            return photos_lst
+        return photos_lst
 
-    async def get_interests(self) -> set[str]:
-        data = await self.api.users.get(
-            user_ids=[self.user_id], fields=self.user_params
-        )
-        params = data[0]
+    def prosessing_interests(self, params):
         interests = [
             str(params.about).split(","),
             str(params.activities).split(","),
@@ -147,14 +140,41 @@ class VKSearcherUser(VkSearcherEngine):
             else:
                 for i in _:
                     lst.append(*i)
+        return lst
 
-        return set(lst)
+    async def get_interests(self) -> set[str]:
+        data = await self.api.users.get(
+            user_ids=[self.user_id], fields=self.user_params
+        )
+        interests = set(self.prosessing_interests(data[0]))
+        words_from_wall = await self.parse_user_wall(self.user_id)
+        interests.update(words_from_wall)
+        # params = data[0]
+        # interests = [
+        #     str(params.about).split(","),
+        #     str(params.activities).split(","),
+        #     str(params.books).split(","),
+        #     str(params.games).split(","),
+        #     str(params.interests).split(","),
+        #     str(params.movies).split(","),
+        #     str(params.music).split(","),
+        #     str(params.tv).split(","),
+        # ]
+        # lst = list()
+        # for _ in interests:
+        #     if len(_) == 1:
+        #         lst.append(*_)
+        #     else:
+        #         for i in _:
+        #             lst.append(*i)
+
+        return interests
 
     async def vk_user_search_params(self) -> VkUserSearch:
         user_params = await self.api.users.get(
             user_ids=[self.user_id], fields=self.user_params
         )
-        params = user_params[0]
+        # params = user_params[0]
         try:
             datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date()
             self.city = user_params[0].city.title
@@ -170,27 +190,12 @@ class VKSearcherUser(VkSearcherEngine):
         finally:
             self.name = f"{user_params[0].first_name} {user_params[0].last_name}"
             self.sex = user_params[0].sex.value
-            interests = [
-                str(params.about).split(","),
-                str(params.activities).split(","),
-                str(params.books).split(","),
-                str(params.games).split(","),
-                str(params.interests).split(","),
-                str(params.movies).split(","),
-                str(params.music).split(","),
-                str(params.tv).split(","),
-            ]
-            lst = list()
-            for _ in interests:
-                if len(_) == 1:
-                    lst.append(*_)
-                else:
-                    for i in _:
-                        lst.append(*i)
-            self.interests = set(lst)
+            interests = self.prosessing_interests(user_params[0])
+            self.interests = set(interests)
+            self.interests.update(await self.parse_user_wall(self.user_id))
             photos = await self.get_users_photos(self.user_id)
+            related_photos = None
             related_photos = await self.get_related_photos(self.user_id)
-
             user = VkUserSearch(self.user_id)
             user.name = self.name
             user.photos = photos
@@ -274,26 +279,29 @@ class VKSearcherManyUsers(VKSearcherUser):
                             user.age = None
 
                     user.name = f"{res.first_name} {res.last_name}"
-                    interests = [
-                        res.about.split(","),
-                        res.activity.split(","),
-                        res.books.split(","),
-                        res.games.split(","),
-                        res.interests.split(","),
-                        res.movies.split(","),
-                        res.music.split(","),
-                    ]
-                    lst = list()
-                    for _ in interests:
-                        if len(_) == 1:
-                            lst.append(*_)
-                        else:
-                            for i in _:
-                                lst.append(*i)
-                    user.interests = set(lst)
+                    # interests = [
+                    #     res.about.split(","),
+                    #     res.activity.split(","),
+                    #     res.books.split(","),
+                    #     res.games.split(","),
+                    #     res.interests.split(","),
+                    #     res.movies.split(","),
+                    #     res.music.split(","),
+                    # ]
+                    # lst = list()
+                    # for _ in interests:
+                    #     if len(_) == 1:
+                    #         lst.append(*_)
+                    #     else:
+                    #         for i in _:
+                    #             lst.append(*i)
+                    interests = set(self.prosessing_interests(res))
+                    await asyncio.sleep(0.2)
+                    interests.update(await self.parse_user_wall(res.id))
+                    user.interests = interests
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_users_photos(res.id)
-                    user.related_photos = await self.get_related_photos(res.id)
+                    # user.related_photos = await self.get_related_photos(res.id)
                     self.result.append(user)
         return set(self.result)
 
@@ -302,17 +310,19 @@ async def test():
     # Здесь тестовая функция. Ее надо удалить
     user_client = VkUserClient(user_id=1)
     user_client.city = "Москва"
-    user_client.age_min = 20
-    user_client.age_max = 30
+    user_client.age_min = 25
+    user_client.age_max = 25
     user_client.gender = 1
     user_client.state = 0
 
     user_searcher = VKSearcherManyUsers(user=user_client)
     user_par = VKSearcherUser(user_id=1)
     # await user_searcher.search_vk_users_as_client_params()
-    # await user_par.vk_user_search_params()
-    # print(user_par.interests)
-    print(await user_par.parse_user_wall(user_par.user_id))
+    await user_par.vk_user_search_params()
+    print(user_par.interests)
+    # print(await user_par.parse_user_wall(user_par.user_id))
+    # for i in user_searcher.result:
+    #     print(i.interests)
 
 
 asyncio.run(test())
