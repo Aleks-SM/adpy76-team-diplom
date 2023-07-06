@@ -11,10 +11,10 @@ class State:
     def __init__(self, user_id: int):
         self.user_id = user_id
 
-    def init(self):
+    async def init(self):
         return
     
-    def feedback(self):
+    async def feedback(self):
         return
 
     @staticmethod
@@ -32,7 +32,7 @@ class State:
             return False, 0
 
     async def get_search_data(self) -> list[VkUserSearch]:
-        return await VKSearcherManyUsers(VkUserClient(self.user_id)).search_vk_users_as_client_params()
+        return list(await VKSearcherManyUsers(VkUserClient(self.user_id)).search_vk_users_as_client_params())
 
     async def get_self_interests(self) -> set[str]:
         return await VKSearcherUser(VkUserClient(self.user_id)).get_interests()

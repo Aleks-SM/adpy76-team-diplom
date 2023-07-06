@@ -1,6 +1,7 @@
 class MenuButtonEnum:
     NEXT: 0
     SHOW_FAVORITES: 1
-    BLOCK_USER: 2
-    SEARCH: 3
-    PLAIN_TEXT: 4
+    LIKE: 2
+    BLOCK_USER: 3
+    SEARCH: 4
+    PLAIN_TEXT: 5

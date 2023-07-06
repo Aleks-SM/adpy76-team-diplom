@@ -144,3 +144,11 @@ def read_json(file_name):
                 session.add(model(favorite_id=record.get("pk"), **record.get("fields")))
         session.commit()
     session.close()
+
+
+def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
+    pass
+
+
+def set_favourite_user(client_user_id: int, favourite_user_id: int):
+    pass

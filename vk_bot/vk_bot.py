@@ -1,5 +1,5 @@
 from vk_bot.states.enums.state_enum import StateEnum
-from vk_bot.states.dialog_states.init_user_state import InitUserState
+from vk_bot.states.dialog_states.registration.init_user_state import InitUserState
 from vk_bot.enums.menu_button_enums import MenuButtonEnum
 from vk_bot.search_cache.search_cache import SearchCache
 

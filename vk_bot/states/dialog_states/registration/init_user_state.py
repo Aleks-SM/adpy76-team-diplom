@@ -12,20 +12,20 @@ class InitUserState(State):
     def init(self):
         pass
 
-    def feedback(self, text=""):
+    async def feedback(self, text=""):
         text = "Привет, это бот для поиска новых знакомств!"
-        Talker(self.user_id).plain_text_without_buttons(text)
-        data = self.initiate_user()
-        create_user_and_set_data(data)
+        await Talker(self.user_id).plain_text_without_buttons(text)
+        data = await self.initiate_user()
+        await create_user_and_set_data(data)
         client = VkUserClient(self.user_id)
         client.check_next_state()
         return client.state()
 
-    def initiate_user(self):
-        gender, city = VKSearcherUser(self.user_id).get_info()
+    async def initiate_user(self):
+        user = VKSearcherUser(self.user_id)
+        await user.vk_user_search_params()
+        city = user.city
         data = {"user_id": self.user_id}
-        if gender is not None:
-            data["gender"] = gender
         if city is not None:
             data["city"] = city
         return data

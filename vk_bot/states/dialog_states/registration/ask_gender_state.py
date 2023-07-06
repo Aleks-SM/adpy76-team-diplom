@@ -8,9 +8,9 @@ class AskGenderState(State):
     def __init__(self, user_id: int):
         super().__init__(user_id)
 
-    def init(self):
+    async def init(self):
         text = "Укажите желаемый пол"
-        Talker(self.user_id).gender_request_with_buttons(text)
+        await Talker(self.user_id).gender_request_with_buttons(text)
 
     def feedback(self, text=""):
         client = VkUserClient(self.user_id)
@@ -22,5 +22,5 @@ class AskGenderState(State):
             return client.state()
         else:
             text = "Упс, не удалось обработать желаемый пол, попробуйте снова"
-            Talker(self.user_id).gender_request_with_buttons(text)
+            await Talker(self.user_id).gender_request_with_buttons(text)
             return None
