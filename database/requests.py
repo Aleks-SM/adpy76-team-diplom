@@ -147,7 +147,11 @@ def read_json(file_name):
 
 
 def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
-    pass
+    session = Database().create_session()
+    query = session.query(User).join(Blacklist).filter(User.user_id == client_user_id).first()
+    if query != None:
+        query.search_gender = param_dict.get("gender")
+        query.search_city = param_dict.get("city")
 
 
 def set_favourite_user(client_user_id: int, favourite_user_id: int):
