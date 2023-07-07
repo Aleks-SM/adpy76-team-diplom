@@ -32,7 +32,11 @@ def get_user_blacklist(user_id: int) -> set[int]:
     query = session.query(Blacklist)
     records = query.all()
     res = []
-    [res.append(blacklist.blocked_vk_user_id) for blacklist in records if blacklist.user_id == user_id]
+    [
+        res.append(blacklist.blocked_vk_user_id)
+        for blacklist in records
+        if blacklist.user_id == user_id
+    ]
     session.close()
     return set(res)
 
@@ -42,7 +46,11 @@ def get_user_favorites(user_id: int) -> set[int]:
     query = session.query(Favorite)
     records = query.all()
     res = []
-    [res.append(favorite.favorite_vk_user_id) for favorite in records if favorite.user_id == user_id]
+    [
+        res.append(favorite.favorite_vk_user_id)
+        for favorite in records
+        if favorite.user_id == user_id
+    ]
     session.close()
     return set(res)
 
@@ -144,15 +152,18 @@ def read_json(file_name):
 
 def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
     session = Database().create_session()
-    query = session.query(Blacklist).join(User).filter(User.user_id == client_user_id).all()
+    query = (
+        session.query(Blacklist).join(User).filter(User.user_id == client_user_id).all()
+    )
     res = []
-    [res.append(blacklist.blocked_vk_user_id) for blacklist in query if blacklist.user_id == client_user_id]
+    [
+        res.append(blacklist.blocked_vk_user_id)
+        for blacklist in query
+        if blacklist.user_id == client_user_id
+    ]
 
     if blacklist_user_id not in res:
-        user = Blacklist(
-            user_id=client_user_id,
-            blocked_vk_user_id=blacklist_user_id
-        )
+        user = Blacklist(user_id=client_user_id, blocked_vk_user_id=blacklist_user_id)
         session.add(user)
         session.commit()
     session.close()
@@ -161,15 +172,18 @@ def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
 
 def set_favourite_user(client_user_id: int, favourite_user_id: int):
     session = Database().create_session()
-    query = session.query(Favorite).join(User).filter(User.user_id == client_user_id).all()
+    query = (
+        session.query(Favorite).join(User).filter(User.user_id == client_user_id).all()
+    )
     res = []
-    [res.append(favorite.favorite_vk_user_id) for favorite in query if favorite.user_id == client_user_id]
+    [
+        res.append(favorite.favorite_vk_user_id)
+        for favorite in query
+        if favorite.user_id == client_user_id
+    ]
 
     if favourite_user_id not in res:
-        user = Favorite(
-            user_id=client_user_id,
-            favorite_vk_user_id=favourite_user_id
-        )
+        user = Favorite(user_id=client_user_id, favorite_vk_user_id=favourite_user_id)
         session.add(user)
         session.commit()
     session.close()
