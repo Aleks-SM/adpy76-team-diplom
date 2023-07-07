@@ -1,6 +1,6 @@
 from database.database import Database
 from database.requests import get_user_data, get_user_blacklist, get_user_favorites, check_user_exits, read_json
-from database.requests import create_user_and_set_data, set_user_data
+from database.requests import create_user_and_set_data, set_user_data, set_blacklist_user, set_favourite_user
 
 if __name__ == "__main__":
     base = Database()
@@ -14,4 +14,6 @@ if __name__ == "__main__":
     print("{} {}".format("check_user", check_user_exits(500)))
     print(create_user_and_set_data({"user_id": 123, "gender": 0, "city": "Moscow", "age_min": 20, "age_max": 25}))
     print(set_user_data(555, {"city": "Moscow", "gender": 1}))
-    print(base.create_session())
+    # print(base.create_session())
+    print(set_blacklist_user(1, 777))
+    print(set_favourite_user(1, 999))

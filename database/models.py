@@ -21,7 +21,7 @@ class User(Base):
 class Favorite(Base):
     __tablename__ = "favorite"
 
-    favorite_id = Column(Integer, primary_key=True)
+    favorite_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.user_id"), nullable=False)
     favorite_vk_user_id = Column(BigInteger, nullable=True)
 
@@ -31,7 +31,7 @@ class Favorite(Base):
 class Blacklist(Base):
     __tablename__ = "blacklist"
 
-    blacklist_id = Column(Integer, primary_key=True)
+    blacklist_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.user_id"), nullable=False)
     blocked_vk_user_id = Column(Integer, nullable=True)
 
