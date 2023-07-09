@@ -26,7 +26,7 @@ def init_env():
 class VkSearcherEngine:
     init_env()
 
-    # Database().create_conect()
+    # Database()
 
     def __init__(
             self,
@@ -193,6 +193,8 @@ class VKSearcherUser(VkSearcherEngine):
             interests = self.prosessing_interests(user_params[0])
             self.interests = set(interests)
             self.interests.update(await self.parse_user_wall(self.user_id))
+            photos = None
+            related_photos = None
             photos = await self.get_users_photos(self.user_id)
             related_photos = None
             related_photos = await self.get_related_photos(self.user_id)
