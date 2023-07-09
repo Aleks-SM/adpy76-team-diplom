@@ -6,13 +6,14 @@ from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 
 class Talker:
-    # bot = Bot(token=os.getenv("vk_token"))
+    bot = Bot(token=os.getenv("vk_token"))
 
     def __init__(self, user_id):
         self.user_id = user_id
+        self.bot = Bot(token=os.getenv("vk_token"))
 
     async def plain_text_without_buttons(self, text: str, message: Message):
-        await message.answer(text)
+        await self.bot.api.messages.send(user_id=self.user_id, message=text)
 
     async def plain_text_with_4_buttons(self, text: str, message: Message):
         keyboard = (
