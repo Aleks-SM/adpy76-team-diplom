@@ -11,12 +11,12 @@ def get_user_data(user_id: int) -> ClientUser:
     if check_user_exits(user_id):
         for query in session.query(User).filter(User.user_id == user_id).all():
             self = ClientUser(
-                user_id=query.user_id,
-                age_min=query.search_age_min,
-                age_max=query.search_age_max,
-                gender=query.search_gender,
+                user_id=int(query.user_id),
+                age_min=int(query.search_age_min),
+                age_max=int(query.search_age_max),
+                gender=int(query.search_gender),
                 city=query.search_city,
-                state=query.state,
+                state=int(query.state),
             )
     else:
         self = ClientUser(
@@ -33,7 +33,7 @@ def get_user_blacklist(user_id: int) -> set[int]:
     records = query.all()
     res = []
     [
-        res.append(blacklist.blocked_vk_user_id)
+        res.append(int(blacklist.blocked_vk_user_id))
         for blacklist in records
         if blacklist.user_id == user_id
     ]
@@ -47,7 +47,7 @@ def get_user_favorites(user_id: int) -> set[int]:
     records = query.all()
     res = []
     [
-        res.append(favorite.favorite_vk_user_id)
+        res.append(int(favorite.favorite_vk_user_id))
         for favorite in records
         if favorite.user_id == user_id
     ]
