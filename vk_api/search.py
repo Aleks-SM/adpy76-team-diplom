@@ -3,30 +3,26 @@ import os
 import pymorphy2
 import re
 from datetime import datetime
-from pprint import pprint
 from collections import Counter
-
-
 from dotenv import load_dotenv
 from vkbottle import API
 from database.database import Database
 from vk_bot.user.user import VkUserSearch, VkUserClient
 
 
-def init_env():
-    if os.path.join(os.path.dirname(__file__), ".envrc"):
-        path = os.path.split(os.path.dirname(__file__))
-        dotenv_path = os.path.join(path[0], ".envrc")
-    else:
-        dotenv_path = os.path.join(os.path.dirname(__file__), ".envrc")
-    if os.path.exists(dotenv_path):
-        load_dotenv(dotenv_path)
+# def init_env():
+#     if os.path.join(os.path.dirname(__file__), ".envrc"):
+#         path = os.path.split(os.path.dirname(__file__))
+#         dotenv_path = os.path.join(path[0], ".envrc")
+#     else:
+#         dotenv_path = os.path.join(os.path.dirname(__file__), ".envrc")
+#     if os.path.exists(dotenv_path):
+#         load_dotenv(dotenv_path)
 
 
 class VkSearcherEngine:
     # init_env()
-
-    Database().create_conect()
+    Database()
 
     def __init__(
             self,
@@ -308,23 +304,23 @@ class VKSearcherManyUsers(VKSearcherUser):
         return set(self.result)
 
 
-async def test():
-    # Здесь тестовая функция. Ее надо удалить
-    user_client = VkUserClient(user_id=1)
-    user_client.city = "Москва"
-    user_client.age_min = 25
-    user_client.age_max = 25
-    user_client.gender = 1
-    user_client.state = 0
-
-    user_searcher = VKSearcherManyUsers(user=user_client)
-    user_par = VKSearcherUser(user_id=1)
-    # await user_searcher.search_vk_users_as_client_params()
-    await user_par.vk_user_search_params()
-    print(user_par.interests)
-    # print(await user_par.parse_user_wall(user_par.user_id))
-    # for i in user_searcher.result:
-    #     print(i.interests)
-
-
-asyncio.run(test())
+# async def test():
+#     # Здесь тестовая функция. Ее надо удалить
+#     user_client = VkUserClient(user_id=1)
+#     user_client.city = "Москва"
+#     user_client.age_min = 25
+#     user_client.age_max = 25
+#     user_client.gender = 1
+#     user_client.state = 0
+#
+#     user_searcher = VKSearcherManyUsers(user=user_client)
+#     user_par = VKSearcherUser(user_id=1)
+#     # await user_searcher.search_vk_users_as_client_params()
+#     await user_par.vk_user_search_params()
+#     print(user_par.interests)
+#     # print(await user_par.parse_user_wall(user_par.user_id))
+#     # for i in user_searcher.result:
+#     #     print(i.interests)
+#
+#
+# asyncio.run(test())
