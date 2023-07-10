@@ -23,7 +23,7 @@ class Favorite(Base):
 
     favorite_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.user_id"), nullable=False)
-    favorite_vk_user_id = Column(BigInteger, nullable=True)
+    favorite_vk_user_id = Column(BigInteger, nullable=False)
 
     favorite = relationship(User, backref="user_fav")
 
@@ -33,6 +33,6 @@ class Blacklist(Base):
 
     blacklist_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, ForeignKey("user.user_id"), nullable=False)
-    blocked_vk_user_id = Column(Integer, nullable=True)
+    blocked_vk_user_id = Column(Integer, nullable=False)
 
     user = relationship(User, backref="user_black")
