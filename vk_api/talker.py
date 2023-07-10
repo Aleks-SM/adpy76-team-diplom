@@ -26,7 +26,6 @@ class Talker:
         await bot.api.messages.send(user_id=self.user_id, message=text, keyboard=keyboard)
         return keyboard
 
-    @bot.on.raw_event(GroupEventType.MESSAGE_EVENT, MessageEvent, rules.PayloadRule({"cmd": "search"}))
     async def vk_search_user(self, vk_user_data: VkUserSearch, bot=bot):
         await bot.api.messages.send(
             text=f"Результат поиска\n{vk_user_data.name}\n{vk_user_data.profile_link}"
