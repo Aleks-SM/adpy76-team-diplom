@@ -21,7 +21,7 @@ class Database:
         self.bd_pass = os.getenv("bd_pass")
         self.bd_host = os.getenv("bd_host")
         self.token = os.getenv("vk_token")
-        self.filename = os.path.join(path[0], os.getenv("filename"))
+        self.filename = os.path.join(path[0], path[1], os.getenv("filename"))
 
     def create_conect(self):
         dsn = "{}://{}:{}@{}:{}/{}".format(
