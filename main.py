@@ -5,7 +5,6 @@ from database.requests import create_user_and_set_data, set_user_data, set_black
 if __name__ == "__main__":
     base = Database()
     # base.create_tables(base.create_conect())
-    # read_json(base.filename)
     print(get_user_data(1))
     print(get_user_data(999))
     print("{} {}".format("blacklist", get_user_blacklist(1)))
