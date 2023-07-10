@@ -24,9 +24,9 @@ def init_env():
 
 
 class VkSearcherEngine:
-    init_env()
+    # init_env()
 
-    # Database()
+    Database().create_conect()
 
     def __init__(
             self,
