@@ -39,8 +39,7 @@ class Talker:
                     bot,
                     user_id=self.user_id
                 )
-                await bot.api.messages.send(attachment=attachment_photo)
-                await bot.api.messages.send(content_source=photo_link)
+                await bot.api.messages.send(attachment=attachment_photo, content_source=photo_link)
             if vk_user_data.related_photos:
                 for related_photo_link in vk_user_data.related_photos:
                     attachment_related_photo = await get_attachment_for_vk_bot(
@@ -49,8 +48,7 @@ class Talker:
                         bot,
                         user_id=self.user_id
                     )
-                    await bot.api.messages.send(attachment=attachment_related_photo)
-                    await bot.api.messages.send(content_source=related_photo_link)
+                    await bot.api.messages.send(attachment=attachment_related_photo, content_source=related_photo_link)
 
     async def menu_buttons(self, bot=bot):
         keyboard = (
