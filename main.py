@@ -12,7 +12,5 @@ if __name__ == "__main__":
     print("{} {}".format("check_user", check_user_exits(1)))
     print("{} {}".format("check_user", check_user_exits(500)))
     print(create_user_and_set_data({"user_id": 123, "gender": 0, "city": "Moscow", "age_min": 20, "age_max": 25}))
-    print(set_user_data(555, {"city": "Moscow", "gender": 1}))
-    # print(base.create_session())
     print(set_blacklist_user(1, 777))
     print(set_favourite_user(1, 999))
