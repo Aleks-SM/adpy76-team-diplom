@@ -6,6 +6,7 @@
 1. Python 3.9+, если нет необходимо установить с [офсайта](https://www.python.org/downloads/).
 2. PostgreSQl ```sudo apt update && sudo apt install postgresql-12```
 3. Создать БД в PostgreSQL, например 'testDb' введя команду в терминале ```sudo su - postgres -c "createdb testDb"```
+4. 
 4. Установить командой необходимые библиотеки ```pip install -r requirements.txt```
 5. Создать файл '.envrc' для переменных окружения командой 
     ```
@@ -18,5 +19,5 @@
     echo "export vk_token=<token>" >> .envrc
     ``` 
    заполнив <...> необходимыми данными
-6. Добавить созданный файл переменных окружения .gitignore ```echo ".envrc" > .gitignore```
+6. Добавить созданный файл переменных окружения в .gitignore ```echo ".envrc" >> .gitignore```
 * команды приведены для ОС Ubuntu/Debian
