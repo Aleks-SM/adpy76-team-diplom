@@ -12,7 +12,7 @@ class AskGenderState(State):
         text = "Укажите желаемый пол"
         await Talker(self.user_id).gender_request_with_buttons(text)
 
-    def feedback(self, text=""):
+    async def feedback(self, text=""):
         client = VkUserClient(self.user_id)
         is_parsed, data = self.try_parse_gender(text)
         if is_parsed:

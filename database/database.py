@@ -23,7 +23,7 @@ class Database:
         self.token = os.getenv("vk_token")
         self.filename = os.path.join(path[0], path[1], os.getenv("filename"))
 
-    def create_conect(self):
+    def create_connect(self):
         dsn = "{}://{}:{}@{}:{}/{}".format(
             self.bd,
             self.bd_username,
@@ -36,7 +36,7 @@ class Database:
         return engine
 
     def create_session(self):
-        Session = sessionmaker(bind=self.create_conect())
+        Session = sessionmaker(bind=self.create_connect())
         return Session()
 
     def create_tables(self, engine):
