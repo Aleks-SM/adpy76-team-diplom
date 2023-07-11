@@ -40,5 +40,5 @@ class Database:
         return Session()
 
     def create_tables(self, engine):
-        Base.metadata.drop_all(engine)
+        # Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
