@@ -304,6 +304,7 @@ class VKSearcherManyUsers(VKSearcherUser):
         return set(self.result)
 
 
+
 # async def test():
 #     # Здесь тестовая функция. Ее надо удалить
 #     user_client = VkUserClient(user_id=1)
