@@ -193,7 +193,7 @@ class VKSearcherUser(VkSearcherEngine):
             related_photos = None
             photos = await self.get_users_photos(self.user_id)
             related_photos = None
-            related_photos = await self.get_related_photos(self.user_id)
+            # related_photos = await self.get_related_photos(self.user_id)
             user = VkUserSearch(self.user_id)
             user.name = self.name
             user.photos = photos
@@ -305,23 +305,23 @@ class VKSearcherManyUsers(VKSearcherUser):
 
 
 
-# async def test():
-#     # Здесь тестовая функция. Ее надо удалить
-#     user_client = VkUserClient(user_id=1)
-#     user_client.city = "Москва"
-#     user_client.age_min = 25
-#     user_client.age_max = 25
-#     user_client.gender = 1
-#     user_client.state = 0
-#
-#     user_searcher = VKSearcherManyUsers(user=user_client)
-#     user_par = VKSearcherUser(user_id=1)
-#     # await user_searcher.search_vk_users_as_client_params()
-#     await user_par.vk_user_search_params()
-#     print(user_par.interests)
-#     # print(await user_par.parse_user_wall(user_par.user_id))
-#     # for i in user_searcher.result:
-#     #     print(i.interests)
-#
-#
-# asyncio.run(test())
+async def test():
+    # Здесь тестовая функция. Ее надо удалить
+    user_client = VkUserClient(user_id=1)
+    user_client.city = "Москва"
+    user_client.age_min = 25
+    user_client.age_max = 25
+    user_client.gender = 1
+    user_client.state = 0
+
+    user_searcher = VKSearcherManyUsers(user=user_client)
+    user_par = VKSearcherUser(user_id=1)
+    # await user_searcher.search_vk_users_as_client_params()
+    await user_par.vk_user_search_params()
+    print(user_par.interests)
+    # print(await user_par.parse_user_wall(user_par.user_id))
+    # for i in user_searcher.result:
+    #     print(i.interests)
+
+
+asyncio.run(test())
