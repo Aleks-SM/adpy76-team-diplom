@@ -183,7 +183,6 @@ def set_favourite_user(client_user_id: int, favourite_user_id: int):
             for favorite in query
             if favorite.user_id == client_user_id
         ]
-
         if favourite_user_id not in res:
             user = Favorite(user_id=client_user_id, favorite_vk_user_id=favourite_user_id)
             session.add(user)
