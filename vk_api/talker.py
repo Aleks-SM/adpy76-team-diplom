@@ -12,7 +12,7 @@ class Talker:
     def __init__(self, user_id):
         self.user_id = user_id
 
-    async def plain_text_without_buttons(self, text: str, message: Message, bot=bot):
+    async def plain_text_without_buttons(self, text: str, bot=bot):
         await bot.api.messages.send(user_id=self.user_id, message=text)
 
     async def plain_text_with_4_buttons(self, text: str, bot=bot):
