@@ -270,7 +270,7 @@ class VKSearcherManyUsers(VKSearcherUser):
             )
 
             for res in peoples.items:
-                if not res.is_closed:# and res.id not in self.user.blacklisted_users:
+                if not res.is_closed and res.id not in self.user.blacklisted_users:
                     user = VkUserSearch(user_id=res.id)
                     try:
                         if isinstance(res.bdate, str):
