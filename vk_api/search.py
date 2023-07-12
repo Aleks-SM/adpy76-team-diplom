@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from vkbottle import API, VKAPIError
 from database.database import Database
 from vk_bot.user.user import VkUserSearch, VkUserClient
-from talker import Talker
+from vk_api.talker import Talker
 
 
 # def init_env():
@@ -335,13 +335,13 @@ async def test():
     user_client.state = 0
 
     # user_searcher = VKSearcherManyUsers(user=user_client)
-    # # # user_par = VKSearcherUser(user_id=1)
+    # user_par = VKSearcherUser(user_id=1)
     # await user_searcher.search_vk_users_as_client_params()
-    # # # await user_par.vk_user_search_params()
-    # # # print(user_par.interests)
-    # # # print(await user_par.parse_user_wall(user_par.user_id))
+    # await user_par.vk_user_search_params()
+    # print(user_par.interests)
+    # print(await user_par.parse_user_wall(user_par.user_id))
     # for i in user_searcher.result:
     #     print(i.interests)
 
 
-asyncio.run(test())
+# asyncio.run(test())

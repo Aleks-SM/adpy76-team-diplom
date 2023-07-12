@@ -5,7 +5,7 @@ from vk_bot.enums.menu_button_enums import MenuButtonEnum
 from vk_bot.user.user import VkUserSearch, GenderEnum
 from vkbottle.bot import Bot, Message, MessageEvent, rules
 from vkbottle import Keyboard, KeyboardButtonColor, Text, Callback, GroupEventType
-from tools import get_attachment_for_vk_bot
+from vk_api.tools import get_attachment_for_vk_bot
 
 
 class Talker:
