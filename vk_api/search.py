@@ -5,9 +5,10 @@ import re
 from datetime import datetime
 from collections import Counter
 from dotenv import load_dotenv
-from vkbottle import API
+from vkbottle import API, VKAPIError
 from database.database import Database
 from vk_bot.user.user import VkUserSearch, VkUserClient
+from talker import Talker
 
 
 # def init_env():
@@ -110,6 +111,7 @@ class VKSearcherUser(VkSearcherEngine):
 
     async def get_related_photos(self, searched_user_id):
         photos_lst = []
+
         photos = await self.user_api.photos.get_user_photos(searched_user_id)
         for item in photos.items:
             photo = None
@@ -189,20 +191,28 @@ class VKSearcherUser(VkSearcherEngine):
             interests = self.prosessing_interests(user_params[0])
             self.interests = set(interests)
             self.interests.update(await self.parse_user_wall(self.user_id))
-            photos = None
-            related_photos = None
-            photos = await self.get_users_photos(self.user_id)
-            related_photos = None
-            # related_photos = await self.get_related_photos(self.user_id)
+
             user = VkUserSearch(self.user_id)
             user.name = self.name
-            user.photos = photos
-            self.photos = photos
-            user.related_photos = related_photos
-            self.related_photos = related_photos
             user.interests = self.interests
             user.age = self.age
             user.gender = self.sex
+            try:
+                photos = await self.get_users_photos(self.user_id)
+            except VKAPIError[7]:
+                user.photos = []
+                self.photos = []
+            else:
+                user.photos = photos
+                self.photos = photos
+            try:
+                related_photos = await self.get_related_photos(self.user_id)
+            except VKAPIError[7]:
+                user.related_photos = []
+                self.related_photos = []
+            else:
+                user.related_photos = related_photos
+                self.related_photos = related_photos
 
         return user
 
@@ -260,7 +270,7 @@ class VKSearcherManyUsers(VKSearcherUser):
             )
 
             for res in peoples.items:
-                if not res.is_closed and res.id not in self.user.blacklisted_users:
+                if not res.is_closed:# and res.id not in self.user.blacklisted_users:
                     user = VkUserSearch(user_id=res.id)
                     try:
                         if isinstance(res.bdate, str):
@@ -299,7 +309,17 @@ class VKSearcherManyUsers(VKSearcherUser):
                     user.interests = interests
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_users_photos(res.id)
-                    # user.related_photos = await self.get_related_photos(res.id)
+                    await asyncio.sleep(0.2)
+                    try:
+                        related_photos = await self.get_related_photos(res.id)
+                    except VKAPIError[7]:
+                        await Talker(self.user.user_id).plain_text_without_buttons(
+                            f"У вас нет прав на получение связанных фото пользователя {res.id}"
+                        )
+                        print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
+                    else:
+                        user.related_photos = related_photos
+
                     self.result.append(user)
         return set(self.result)
 
@@ -314,12 +334,12 @@ async def test():
     user_client.gender = 1
     user_client.state = 0
 
-    user_searcher = VKSearcherManyUsers(user=user_client)
-    user_par = VKSearcherUser(user_id=1)
+    # user_searcher = VKSearcherManyUsers(user=user_client)
+    # # # user_par = VKSearcherUser(user_id=1)
     # await user_searcher.search_vk_users_as_client_params()
-    await user_par.vk_user_search_params()
-    print(user_par.interests)
-    # print(await user_par.parse_user_wall(user_par.user_id))
+    # # # await user_par.vk_user_search_params()
+    # # # print(user_par.interests)
+    # # # print(await user_par.parse_user_wall(user_par.user_id))
     # for i in user_searcher.result:
     #     print(i.interests)
 
