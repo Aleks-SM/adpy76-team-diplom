@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class StateEnum(Enum):
+class StateEnum(IntEnum):
     ASK_AGE_MIN = 0
     ASK_AGE_MAX = 1
     ASK_CITY = 2

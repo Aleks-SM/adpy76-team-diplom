@@ -176,7 +176,7 @@ class VKSearcherUser(VkSearcherEngine):
         try:
             datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date()
             self.city = user_params[0].city.title
-        except ValueError:
+        except:
             self.age = None
             self.city = None
         else:
@@ -190,8 +190,7 @@ class VKSearcherUser(VkSearcherEngine):
             self.sex = user_params[0].sex.value
             interests = self.prosessing_interests(user_params[0])
             self.interests = set(interests)
-            self.interests.update(await self.parse_user_wall(self.user_id))
-
+            #self.interests.update(await self.parse_user_wall(self.user_id))
             user = VkUserSearch(self.user_id)
             user.name = self.name
             user.interests = self.interests
@@ -305,7 +304,7 @@ class VKSearcherManyUsers(VKSearcherUser):
                     #             lst.append(*i)
                     interests = set(self.prosessing_interests(res))
                     await asyncio.sleep(0.2)
-                    interests.update(await self.parse_user_wall(res.id))
+                    # interests.update(await self.parse_user_wall(res.id))
                     user.interests = interests
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_users_photos(res.id)

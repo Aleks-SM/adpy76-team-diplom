@@ -16,10 +16,10 @@ class InitUserState(State):
         text = "Привет, это бот для поиска новых знакомств!"
         await Talker(self.user_id).plain_text_without_buttons(text)
         data = await self.initiate_user()
-        await create_user_and_set_data(data)
+        create_user_and_set_data(data)
         client = VkUserClient(self.user_id)
         client.check_next_state()
-        return client.state()
+        return client.state
 
     async def initiate_user(self):
         user = VKSearcherUser(self.user_id)

@@ -7,7 +7,7 @@ class FavouriteUserSearchState(SearchState):
     def __init__(self, user_id: int, search_cache: SearchCache):
         super().__init__(user_id, search_cache)
 
-    async def feedback(self):
+    async def feedback(self, message=""):
         last_user = await self.get_last_user_search()
         if last_user is not None:
             set_favourite_user(self.user_id, last_user)

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class MenuButtonEnum(Enum):
+class MenuButtonEnum(IntEnum):
     NEXT = 0
     SHOW_FAVORITES = 1
     LIKE = 2

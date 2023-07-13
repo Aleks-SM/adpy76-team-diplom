@@ -22,7 +22,7 @@ class VkBot:
     async def action(self, user_id: int, action_type: MenuButtonEnum, message=""):
         user = VkUserClient(user_id)
         state = self.get_state(user, action_type, message)
-        await state.feedback()
+        await state.feedback(message)
         user.try_get_data()
         state = self.get_state(user, action_type, message)
         await state.init()

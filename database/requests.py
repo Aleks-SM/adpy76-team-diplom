@@ -11,12 +11,12 @@ def get_user_data(user_id: int) -> ClientUser:
     if check_user_exits(user_id):
         for query in session.query(User).filter(User.user_id == user_id).all():
             self = ClientUser(
-                user_id=int(query.user_id),
-                age_min=int(query.search_age_min),
-                age_max=int(query.search_age_max),
-                gender=int(query.search_gender),
+                user_id=query.user_id,
+                age_min=query.search_age_min,
+                age_max=query.search_age_max,
+                gender=query.search_gender,
                 city=query.search_city,
-                state=int(query.state),
+                state=query.state,
             )
     else:
         self = ClientUser(
@@ -84,6 +84,8 @@ def set_user_data(user_id: int, param_dict: dict):
             query.search_age_max = param_dict.get("age_max")
         elif param_dict.get("user_name") != None:
             query.user_name = param_dict.get("user_name")
+        elif param_dict.get("state") != None:
+            query.state = param_dict.get("state")
         res = "{} {} {}".format("Данные пользователя с id:", user_id, "обновлены")
     else:
         res = "{} {} {}".format("Пользователь с id:", user_id, "не существует в БД")

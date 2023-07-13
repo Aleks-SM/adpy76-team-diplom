@@ -19,7 +19,7 @@ class AskGenderState(State):
             set_user_data(self.user_id, {"gender": data})
             client.try_get_data()
             client.check_next_state()
-            return client.state()
+            return client.state
         else:
             text = "Упс, не удалось обработать желаемый пол, попробуйте снова"
             await Talker(self.user_id).gender_request_with_buttons(text)

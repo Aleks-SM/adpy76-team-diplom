@@ -6,7 +6,7 @@ class NextSearchState(SearchState):
     def __init__(self, user_id: int, search_cache: SearchCache):
         super().__init__(user_id, search_cache)
 
-    async def feedback(self):
+    async def feedback(self, message=""):
         await self.send_user_search()
 
 

@@ -7,7 +7,7 @@ class ShowFavoritesSearchState(SearchState):
     def __init__(self, user_id: int, search_cache: SearchCache):
         super().__init__(user_id, search_cache)
 
-    async def feedback(self):
+    async def feedback(self, message=""):
         fav_users = list(get_user_favorites(self.user_id))
         self.search_cache.add_new_queue(self.user_id, fav_users)
         await self.send_user_search()

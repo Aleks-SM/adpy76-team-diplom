@@ -21,7 +21,7 @@ class AskCityState(State):
             set_user_data(self.user_id, {"city": text})
             client.try_get_data()
             client.check_next_state()
-            return client.state()
+            return client.state
         else:
             text = "Упс, не удалось найти указанный город, попробуйте снова"
             await Talker(self.user_id).plain_text_without_buttons(text)

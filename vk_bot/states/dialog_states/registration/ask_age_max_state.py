@@ -21,7 +21,7 @@ class AskAgeMaxState(State):
             set_user_data(self.user_id, {"age_max": data})
             client.try_get_data()
             client.check_next_state()
-            return client.state()
+            return client.state
         else:
             text = "Пожалуйста, введите корректный возраст"
             await Talker(self.user_id).plain_text_without_buttons(text)

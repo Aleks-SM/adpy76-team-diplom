@@ -39,7 +39,7 @@ class State:
 
     @staticmethod
     async def get_single_user_data(user_id: int) -> VkUserSearch:
-        return await VKSearcherUser(VkUserClient(user_id)).vk_user_search_params()
+        return await VKSearcherUser(user_id).vk_user_search_params()
 
 
 
