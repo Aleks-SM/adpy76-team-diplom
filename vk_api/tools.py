@@ -26,7 +26,7 @@ async def get_attachment_for_vk_bot(session, photo_link, bot, user_id):
         # file = BytesIO(photo_file)
         bot_link = await bot.api.photos.get_messages_upload_server(peer_id=user_id)
         async with session.post(bot_link.upload_url, data=photo_file) as response1:
-            data = await response1.json()
+            data = await response1.json(content_type='text/html')
             saved_photo = await bot.api.photos.save_messages_photo(
                 server=data['server'],
                 photo=data['photo'],

@@ -40,7 +40,7 @@ class Talker:
         await self.bot.api.messages.send(
             user_id=self.user_id, message=f"Результат поиска\n{vk_user_data.name}\n{vk_user_data.profile_link}", random_id=0
         )
-        with aiohttp.ClientSession as session:
+        async with aiohttp.ClientSession() as session:
             for photo_link in vk_user_data.photos:
                 attachment_photo = await get_attachment_for_vk_bot(
                     session,
