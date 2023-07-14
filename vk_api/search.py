@@ -134,10 +134,10 @@ class VKSearcherUser(VkSearcherEngine):
         lst = list()
         for _ in interests:
             if len(_) == 1:
-                lst.append(_)
+                lst.append(*_)
             else:
                 for i in _:
-                    lst.append(i)
+                    lst.append(*i)
         return lst
 
     async def get_interests(self) -> set[str]:
@@ -313,9 +313,9 @@ class VKSearcherManyUsers(VKSearcherUser):
                     try:
                         related_photos = await self.get_related_photos(res.id)
                     except VKAPIError[7]:
-                        await Talker(self.user.user_id).plain_text_without_buttons(
-                            f"У вас нет прав на получение связанных фото пользователя {res.id}"
-                        )
+                        # await Talker(self.user.user_id).plain_text_without_buttons(
+                        #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
+                        # )
                         print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
                     else:
                         user.related_photos = related_photos
@@ -325,23 +325,24 @@ class VKSearcherManyUsers(VKSearcherUser):
 
 
 
-async def test():
-    # Здесь тестовая функция. Ее надо удалить
-    user_client = VkUserClient(user_id=1)
-    user_client.city = "Москва"
-    user_client.age_min = 25
-    user_client.age_max = 25
-    user_client.gender = 1
-    user_client.state = 0
-
-    # user_searcher = VKSearcherManyUsers(user=user_client)
-    # user_par = VKSearcherUser(user_id=791094457)
-    # await user_searcher.search_vk_users_as_client_params()
-    # await user_par.vk_user_search_params()
-    # print(user_par.interests)
-    # print(await user_par.parse_user_wall(user_par.user_id))
-    # for i in user_searcher.result:
-    #     print(i.interests)
+# async def test():
+#     # Здесь тестовая функция. Ее надо удалить
+#     user_client = VkUserClient(user_id=791094457)
+#     user_client.city = "Москва"
+#     user_client.age_min = 25
+#     user_client.age_max = 25
+#     user_client.gender = 1
+#     user_client.state = 0
+#     user_client.blacklisted_users = []
+#
+#     user_searcher = VKSearcherManyUsers(user=user_client)
+#     # user_par = VKSearcherUser(user_id=791094457)
+#     await user_searcher.search_vk_users_as_client_params()
+#     # await user_par.vk_user_search_params()
+#     # print(user_par.interests)
+#     # print(await user_par.parse_user_wall(user_par.user_id))
+#     for i in user_searcher.result:
+#         print(i.interests)
 
 
 # asyncio.run(test())
