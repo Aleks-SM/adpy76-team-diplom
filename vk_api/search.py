@@ -4,25 +4,14 @@ import pymorphy2
 import re
 from datetime import datetime
 from collections import Counter
-from dotenv import load_dotenv
 from vkbottle import API, VKAPIError
 from database.database import Database
 from vk_bot.user.user import VkUserSearch, VkUserClient
 from vk_api.talker import Talker
 
 
-# def init_env():
-#     if os.path.join(os.path.dirname(__file__), ".envrc"):
-#         path = os.path.split(os.path.dirname(__file__))
-#         dotenv_path = os.path.join(path[0], ".envrc")
-#     else:
-#         dotenv_path = os.path.join(os.path.dirname(__file__), ".envrc")
-#     if os.path.exists(dotenv_path):
-#         load_dotenv(dotenv_path)
-
-
 class VkSearcherEngine:
-    # init_env()
+
     Database()
 
     def __init__(
@@ -100,7 +89,8 @@ class VKSearcherUser(VkSearcherEngine):
             photo = None
             for size in item.sizes:
                 photo = size.url
-            lst.append((item.likes.count, photo))
+                break
+            lst.append((item.likes.count, photo, item.owner_id, item.id))
         if len(lst) > 3:
             lst = sorted(lst, key=lambda x: x[0], reverse=True)[:2]
         for i in lst:
@@ -134,10 +124,12 @@ class VKSearcherUser(VkSearcherEngine):
         lst = list()
         for _ in interests:
             if len(_) == 1:
-                lst.append(*_)
+                lst.extend(_)
+            elif len(_) == 0:
+                break
             else:
                 for i in _:
-                    lst.append(*i)
+                    lst.extend(i)
         return lst
 
     async def get_interests(self) -> set[str]:
@@ -307,27 +299,25 @@ class VKSearcherManyUsers(VKSearcherUser):
                     await asyncio.sleep(0.2)
                     interests.update(await self.parse_user_wall(res.id))
                     user.interests = interests
-                    await asyncio.sleep(0.34)
-                    user.photos = await self.get_users_photos(res.id)
-                    await asyncio.sleep(0.2)
-                    try:
-                        related_photos = await self.get_related_photos(res.id)
-                    except VKAPIError[7]:
-                        # await Talker(self.user.user_id).plain_text_without_buttons(
-                        #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
-                        # )
-                        print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
-                    else:
-                        user.related_photos = related_photos
+                    # await asyncio.sleep(0.34)
+                    # user.photos = await self.get_users_photos(res.id)
+                    # await asyncio.sleep(0.2)
+                    # try:
+                    #     related_photos = await self.get_related_photos(res.id)
+                    # except VKAPIError[7]:
+                    #     # await Talker(self.user.user_id).plain_text_without_buttons(
+                    #     #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
+                    #     # )
+                    #     print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
+                    # else:
+                    #     user.related_photos = related_photos
 
                     self.result.append(user)
         return set(self.result)
 
-
-
 # async def test():
 #     # Здесь тестовая функция. Ее надо удалить
-#     user_client = VkUserClient(user_id=791094457)
+#     user_client = VkUserClient(user_id=1)
 #     user_client.city = "Москва"
 #     user_client.age_min = 25
 #     user_client.age_max = 25
@@ -336,7 +326,7 @@ class VKSearcherManyUsers(VKSearcherUser):
 #     user_client.blacklisted_users = []
 #
 #     user_searcher = VKSearcherManyUsers(user=user_client)
-#     # user_par = VKSearcherUser(user_id=791094457)
+#     # user_par = VKSearcherUser(user_id=1)
 #     await user_searcher.search_vk_users_as_client_params()
 #     # await user_par.vk_user_search_params()
 #     # print(user_par.interests)

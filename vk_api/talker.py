@@ -42,22 +42,24 @@ class Talker:
         )
         async with aiohttp.ClientSession() as session:
             for photo_link in vk_user_data.photos:
+                photo = f'photo{photo_link[1]}_{photo_link[2]}'
                 attachment_photo = await get_attachment_for_vk_bot(
                     session,
                     photo_link,
                     self.bot,
                     user_id=self.user_id
                 )
-                await self.bot.api.messages.send(user_id=self.user_id, message="Фото из профиля", attachment=attachment_photo, content_source=photo_link, random_id=0)
+                await self.bot.api.messages.send(user_id=self.user_id, message="Фото из профиля", attachment=photo_link, random_id=0)
             if vk_user_data.related_photos:
                 for related_photo_link in vk_user_data.related_photos:
+                    photo = f'photo{photo_link[1]}_{photo_link[2]}'
                     attachment_related_photo = await get_attachment_for_vk_bot(
                         session,
                         related_photo_link,
                         self.bot,
                         user_id=self.user_id
                     )
-                    await self.bot.api.messages.send(user_id=self.user_id, message="Отмечен на фото", attachment=attachment_related_photo, content_source=related_photo_link, random_id=0)
+                    await self.bot.api.messages.send(user_id=self.user_id, message="Отмечен на фото", attachment=related_photo_link, random_id=0)
 
     async def menu_buttons(self):
         keyboard = (
