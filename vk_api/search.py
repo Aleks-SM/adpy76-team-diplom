@@ -134,10 +134,10 @@ class VKSearcherUser(VkSearcherEngine):
         lst = list()
         for _ in interests:
             if len(_) == 1:
-                lst.append(*_)
+                lst.append(_)
             else:
                 for i in _:
-                    lst.append(*i)
+                    lst.append(i)
         return lst
 
     async def get_interests(self) -> set[str]:
@@ -190,7 +190,7 @@ class VKSearcherUser(VkSearcherEngine):
             self.sex = user_params[0].sex.value
             interests = self.prosessing_interests(user_params[0])
             self.interests = set(interests)
-            #self.interests.update(await self.parse_user_wall(self.user_id))
+            self.interests.update(await self.parse_user_wall(self.user_id))
             user = VkUserSearch(self.user_id)
             user.name = self.name
             user.interests = self.interests
@@ -219,6 +219,7 @@ class VKSearcherUser(VkSearcherEngine):
 class VKSearcherManyUsers(VKSearcherUser):
     def __init__(self, user: VkUserClient, *args, **kwargs):
         super().__init__(user, *args, **kwargs)
+        user.gender = int(user.gender)
         self.user = user
         self.result: list[VkUserSearch] = []
 
@@ -304,7 +305,7 @@ class VKSearcherManyUsers(VKSearcherUser):
                     #             lst.append(*i)
                     interests = set(self.prosessing_interests(res))
                     await asyncio.sleep(0.2)
-                    # interests.update(await self.parse_user_wall(res.id))
+                    interests.update(await self.parse_user_wall(res.id))
                     user.interests = interests
                     await asyncio.sleep(0.34)
                     user.photos = await self.get_users_photos(res.id)
@@ -334,7 +335,7 @@ async def test():
     user_client.state = 0
 
     # user_searcher = VKSearcherManyUsers(user=user_client)
-    # user_par = VKSearcherUser(user_id=1)
+    # user_par = VKSearcherUser(user_id=791094457)
     # await user_searcher.search_vk_users_as_client_params()
     # await user_par.vk_user_search_params()
     # print(user_par.interests)
