@@ -167,6 +167,7 @@ def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
 
         if blacklist_user_id not in res:
             user = Blacklist(user_id=client_user_id, blocked_vk_user_id=blacklist_user_id)
+            res.append(blacklist_user_id)
             session.add(user)
             session.commit()
         session.close()
@@ -187,6 +188,7 @@ def set_favourite_user(client_user_id: int, favourite_user_id: int):
         ]
         if favourite_user_id not in res:
             user = Favorite(user_id=client_user_id, favorite_vk_user_id=favourite_user_id)
+            res.append(favourite_user_id)
             session.add(user)
             session.commit()
         session.close()
