@@ -6,6 +6,7 @@
 1. Python 3.10, если нет необходимо установить с [офсайта](https://www.python.org/downloads/)
 2. PostgreSQL ```sudo apt update && sudo apt install postgresql-12```
 3. Создать БД в PostgreSQL, например 'testDb' введя команду в терминале ```sudo su - postgres -c "createdb testDb"```
+
    ![Схема БД](https://github.com/Aleks-SM/adpy76-team-diplom/raw/main/database/schema.png)
 5. Установить командой необходимые библиотеки ```pip install -r requirements.txt```
 5. Создать файл '.envrc' для переменных окружения командой 
