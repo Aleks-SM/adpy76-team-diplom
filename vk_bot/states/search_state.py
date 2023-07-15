@@ -22,8 +22,8 @@ class SearchState(State):
     async def send_user_search(self):
         if self.search_cache.check_if_not_empty(self.user_id):
             user_search = self.search_cache.pop_queue(self.user_id)
-            if user_search is not VkUserSearch:
-                user_search = await self.get_single_user_data(user_search.user_id)
+            if not isinstance(user_search, VkUserSearch):
+                user_search = await self.get_single_user_data(user_search)
             await Talker(self.user_id).vk_search_user(user_search)
         else:
             await Talker(self.user_id).plain_text_without_buttons("Упс, похоже нет больше людей в выдаче")

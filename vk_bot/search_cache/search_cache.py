@@ -9,7 +9,7 @@ class SearchCache:
         if user_id in self.search_data_dict:
             search_data = self.search_data_dict[user_id]
             data = search_data.queue.pop(0)
-            if data is int:
+            if isinstance(data, int):
                 search_data.last_user = data
             else:
                 search_data.last_user = data.user_id

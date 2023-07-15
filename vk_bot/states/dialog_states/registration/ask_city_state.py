@@ -17,7 +17,7 @@ class AskCityState(State):
 
     async def feedback(self, text=""):
         client = VkUserClient(self.user_id)
-        if check_if_city_exists(text):
+        if await check_if_city_exists(text):
             set_user_data(self.user_id, {"city": text})
             client.try_get_data()
             client.check_next_state()

@@ -182,7 +182,10 @@ class VKSearcherUser(VkSearcherEngine):
             self.sex = user_params[0].sex.value
             interests = self.prosessing_interests(user_params[0])
             self.interests = set(interests)
-            self.interests.update(await self.parse_user_wall(self.user_id))
+            try:
+                self.interests.update(await self.parse_user_wall(self.user_id))
+            except Exception as e:
+                print(e)
             user = VkUserSearch(self.user_id)
             user.name = self.name
             user.interests = self.interests
@@ -297,7 +300,10 @@ class VKSearcherManyUsers(VKSearcherUser):
                     #             lst.append(*i)
                     interests = set(self.prosessing_interests(res))
                     await asyncio.sleep(0.2)
-                    interests.update(await self.parse_user_wall(res.id))
+                    try:
+                        interests.update(await self.parse_user_wall(res.id))
+                    except Exception as e:
+                        print(e)
                     user.interests = interests
                     # await asyncio.sleep(0.34)
                     # user.photos = await self.get_users_photos(res.id)

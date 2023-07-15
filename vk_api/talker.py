@@ -38,7 +38,7 @@ class Talker:
 
     async def vk_search_user(self, vk_user_data: VkUserSearch):
         await self.bot.api.messages.send(
-            user_id=self.user_id, message=f"Результат поиска\n{vk_user_data.name}\n{vk_user_data.profile_link}", random_id=0
+            user_id=self.user_id, message=f"{vk_user_data.name}\n{vk_user_data.profile_link}", random_id=0
         )
         async with aiohttp.ClientSession() as session:
             for photo_link in vk_user_data.photos:
