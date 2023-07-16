@@ -61,16 +61,34 @@ class Talker:
                         user_id=self.user_id
                     )
                     await asyncio.sleep(0.1)
-                    await self.bot.api.messages.send(user_id=self.user_id, attachment=attachment_related_photo, random_id=0)
+                    await self.bot.api.messages.send(
+                        user_id=self.user_id,
+                        attachment=attachment_related_photo, random_id=0
+                    )
 
     async def menu_buttons(self):
         keyboard = (
             Keyboard(one_time=True)
-            .add(Text("Поиск", payload={"cmd": MenuButtonEnum.SEARCH.value.__str__()}))
-            .add(Text("Лайк", payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}))
-            .add(Text("Блок", payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()}))
-            .add(Text("Следующий", payload={"cmd": MenuButtonEnum.NEXT.value.__str__()}))
-            .add(Text("Избранные", payload={"cmd": MenuButtonEnum.SHOW_FAVORITES.value.__str__()}))
+            .add(Text(
+                "Поиск",
+                payload={"cmd": MenuButtonEnum.SEARCH.value.__str__()}), color=KeyboardButtonColor.PRIMARY
+            )
+            .add(Text(
+                "Лайк",
+                payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}), color=KeyboardButtonColor.POSITIVE
+            )
+            .add(Text(
+                "Блок",
+                payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()}), color=KeyboardButtonColor.NEGATIVE
+            )
+            .add(
+                Text("Следующий",
+                payload={"cmd": MenuButtonEnum.NEXT.value.__str__()}), color=KeyboardButtonColor.SECONDARY
+            )
+            .add(Text(
+                "Избранные",
+                payload={"cmd": MenuButtonEnum.SHOW_FAVORITES.value.__str__()})
+            )
             .get_json()
         )
         await self.bot.api.messages.send(user_id=self.user_id, keyboard=keyboard, random_id=0, message="💞💞💞")
@@ -79,8 +97,14 @@ class Talker:
     async def gender_request_with_buttons(self, text: str):
         keyboard = (
             Keyboard(one_time=True)
-            .add(Text("Мужской", payload={"cmd": GenderEnum.MALE.value.__str__()}))
-            .add(Text("Женский", payload={"cmd": GenderEnum.FEMALE.value.__str__()}))
+            .add(Text(
+                "Мужской",
+                payload={"cmd": GenderEnum.MALE.value.__str__()}), color=KeyboardButtonColor.NEGATIVE
+            )
+            .add(Text(
+                "Женский", payload={"cmd": GenderEnum.FEMALE.value.__str__()}),
+                color=KeyboardButtonColor.POSITIVE
+            )
             .row()
             .add(Text("Не имеет значения", payload={"cmd": GenderEnum.ANY.value.__str__()}))
             .get_json()
