@@ -1,6 +1,6 @@
 import os
+
 from vkbottle import API
-from io import BytesIO
 
 
 async def check_if_city_exists(city: str) -> bool:
@@ -20,17 +20,11 @@ async def check_if_city_exists(city: str) -> bool:
     #     return cities_set
 
 
-async def get_attachment_for_vk_bot(session, photo_link, bot, user_id):
-    async with session.get(photo_link) as response:
-        photo_file = await response.content.read()
-        file = BytesIO(photo_file)
-        bot_link = await bot.api.photos.get_messages_upload_server(peer_id=user_id)
-        print(bot_link)
-        # async with session.post(bot_link.upload_url, data={'photo': file}) as response1:
-        #     data = await response1.json(content_type='text/html')
-        #     saved_photo = await bot.api.photos.save_messages_photo(
-        #         server=data['server'],
-        #         photo=data['photo'],
-        #         hash=data['hash']
-        #     )
-        #     return f'photo-{saved_photo[3]}_{saved_photo[0]}'
+async def get_attachment_for_vk_bot(session, user_id, photo_url, photo_uploader):
+    photo_file = await session.get(photo_url)
+    file = await photo_file.content.read()
+    photo = await photo_uploader.upload(
+        file_source=file,
+        peer_id=user_id
+    )
+    return photo

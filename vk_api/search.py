@@ -7,7 +7,6 @@ from collections import Counter
 from vkbottle import API, VKAPIError
 from database.database import Database
 from vk_bot.user.user import VkUserSearch, VkUserClient
-from vk_api.talker import Talker
 
 
 class VkSearcherEngine:
@@ -107,6 +106,7 @@ class VKSearcherUser(VkSearcherEngine):
             photo = None
             for size in item.sizes:
                 photo = size.url
+                break
             photos_lst.append(photo)
         return photos_lst
 

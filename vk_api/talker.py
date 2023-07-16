@@ -1,10 +1,10 @@
-import os
+import asyncio
 import aiohttp
 
 from vk_bot.enums.menu_button_enums import MenuButtonEnum
 from vk_bot.user.user import VkUserSearch, GenderEnum
 from vkbottle.bot import Bot, Message, MessageEvent, rules
-from vkbottle import Keyboard, KeyboardButtonColor, Text, Text, GroupEventType
+from vkbottle import Keyboard, KeyboardButtonColor, Text, Text, GroupEventType, PhotoMessageUploader, PhotoUploader
 from vk_api.tools import get_attachment_for_vk_bot
 from vkbottle import Bot
 
@@ -40,26 +40,28 @@ class Talker:
         await self.bot.api.messages.send(
             user_id=self.user_id, message=f"{vk_user_data.name}\n{vk_user_data.profile_link}", random_id=0
         )
+        photo_uploader = PhotoMessageUploader(self.bot.api)
         async with aiohttp.ClientSession() as session:
-            for photo_link in vk_user_data.photos:
-                # photo = f'photo{photo_link[1]}_{photo_link[2]}'
+            await self.bot.api.messages.send(user_id=self.user_id, message="Фото из профиля", random_id=0)
+            for photo_url in vk_user_data.photos:
                 attachment_photo = await get_attachment_for_vk_bot(
-                    session,
-                    photo_link,
-                    self.bot,
+                    session=session,
+                    photo_url=photo_url,
+                    photo_uploader=photo_uploader,
                     user_id=self.user_id
                 )
-                await self.bot.api.messages.send(user_id=self.user_id, message="Фото из профиля", attachment=photo_link, random_id=0)
+                await self.bot.api.messages.send(user_id=self.user_id, attachment=attachment_photo, random_id=0)
             if vk_user_data.related_photos:
-                for related_photo_link in vk_user_data.related_photos:
-                    # photo = f'photo{photo_link[1]}_{photo_link[2]}'
+                await self.bot.api.messages.send(user_id=self.user_id, message="Отмечен на фото", random_id=0)
+                for related_photo_url in vk_user_data.related_photos:
                     attachment_related_photo = await get_attachment_for_vk_bot(
-                        session,
-                        related_photo_link,
-                        self.bot,
+                        session=session,
+                        photo_url=related_photo_url,
+                        photo_uploader=photo_uploader,
                         user_id=self.user_id
                     )
-                    await self.bot.api.messages.send(user_id=self.user_id, message="Отмечен на фото", attachment=related_photo_link, random_id=0)
+                    await asyncio.sleep(0.1)
+                    await self.bot.api.messages.send(user_id=self.user_id, attachment=attachment_related_photo, random_id=0)
 
     async def menu_buttons(self):
         keyboard = (
