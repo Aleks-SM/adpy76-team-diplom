@@ -305,18 +305,18 @@ class VKSearcherManyUsers(VKSearcherUser):
                     except Exception as e:
                         print(e)
                     user.interests = interests
-                    # await asyncio.sleep(0.34)
-                    # user.photos = await self.get_users_photos(res.id)
-                    # await asyncio.sleep(0.2)
-                    # try:
-                    #     related_photos = await self.get_related_photos(res.id)
-                    # except VKAPIError[7]:
-                    #     # await Talker(self.user.user_id).plain_text_without_buttons(
-                    #     #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
-                    #     # )
-                    #     print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
-                    # else:
-                    #     user.related_photos = related_photos
+                    await asyncio.sleep(0.34)
+                    user.photos = await self.get_users_photos(res.id)
+                    await asyncio.sleep(0.2)
+                    try:
+                        related_photos = await self.get_related_photos(res.id)
+                    except VKAPIError[7]:
+                        # await Talker(self.user.user_id).plain_text_without_buttons(
+                        #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
+                        # )
+                        print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
+                    else:
+                        user.related_photos = related_photos
 
                     self.result.append(user)
         return set(self.result)
