@@ -10,7 +10,6 @@ from vk_bot.user.user import VkUserSearch, VkUserClient
 
 
 class VkSearcherEngine:
-
     Database()
 
     def __init__(
@@ -91,7 +90,7 @@ class VKSearcherUser(VkSearcherEngine):
                 break
             lst.append((item.likes.count, photo, item.owner_id, item.id))
         if len(lst) > 3:
-            lst = sorted(lst, key=lambda x: x[0], reverse=True)[:2]
+            lst = sorted(lst, key=lambda x: x[0], reverse=True)[:3]
         for i in lst:
             new_lst.append(i[1])
         if new_lst:
@@ -321,24 +320,24 @@ class VKSearcherManyUsers(VKSearcherUser):
                     self.result.append(user)
         return set(self.result)
 
-# async def test():
-#     # Здесь тестовая функция. Ее надо удалить
-#     user_client = VkUserClient(user_id=1)
-#     user_client.city = "Москва"
-#     user_client.age_min = 25
-#     user_client.age_max = 25
-#     user_client.gender = 1
-#     user_client.state = 0
-#     user_client.blacklisted_users = []
-#
-#     user_searcher = VKSearcherManyUsers(user=user_client)
-#     # user_par = VKSearcherUser(user_id=1)
-#     await user_searcher.search_vk_users_as_client_params()
-#     # await user_par.vk_user_search_params()
-#     # print(user_par.interests)
-#     # print(await user_par.parse_user_wall(user_par.user_id))
-#     for i in user_searcher.result:
-#         print(i.interests)
 
+async def test():
+    #     # Здесь тестовая функция. Ее надо удалить
+    user_client = VkUserClient(user_id=592257352)
+    #     user_client.city = "Москва"
+    #     user_client.age_min = 25
+    #     user_client.age_max = 25
+    #     user_client.gender = 1
+    #     user_client.state = 0
+    #     user_client.blacklisted_users = []
+    #
+    #     user_searcher = VKSearcherManyUsers(user=user_client)
+    user_par = VKSearcherUser(user_id=592257352)
+    #     await user_searcher.search_vk_users_as_client_params()
+    await user_par.vk_user_search_params()
+    #     # print(user_par.interests)
+    #     # print(await user_par.parse_user_wall(user_par.user_id))
+    for i in user_par.photos:
+        print(i)
 
-# asyncio.run(test())
+asyncio.run(test())
