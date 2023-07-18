@@ -321,23 +321,23 @@ class VKSearcherManyUsers(VKSearcherUser):
         return set(self.result)
 
 
-async def test():
-    #     # Здесь тестовая функция. Ее надо удалить
-    user_client = VkUserClient(user_id=592257352)
-    #     user_client.city = "Москва"
-    #     user_client.age_min = 25
-    #     user_client.age_max = 25
-    #     user_client.gender = 1
-    #     user_client.state = 0
-    #     user_client.blacklisted_users = []
-    #
-    #     user_searcher = VKSearcherManyUsers(user=user_client)
-    user_par = VKSearcherUser(user_id=592257352)
-    #     await user_searcher.search_vk_users_as_client_params()
-    await user_par.vk_user_search_params()
-    #     # print(user_par.interests)
-    #     # print(await user_par.parse_user_wall(user_par.user_id))
-    for i in user_par.photos:
-        print(i)
-
-asyncio.run(test())
+# async def test():
+#     #     # Здесь тестовая функция. Ее надо удалить
+#     user_client = VkUserClient(user_id=592257352)
+#     #     user_client.city = "Москва"
+#     #     user_client.age_min = 25
+#     #     user_client.age_max = 25
+#     #     user_client.gender = 1
+#     #     user_client.state = 0
+#     #     user_client.blacklisted_users = []
+#     #
+#     #     user_searcher = VKSearcherManyUsers(user=user_client)
+#     user_par = VKSearcherUser(user_id=592257352)
+#     #     await user_searcher.search_vk_users_as_client_params()
+#     await user_par.vk_user_search_params()
+#     #     # print(user_par.interests)
+#     #     # print(await user_par.parse_user_wall(user_par.user_id))
+#     for i in user_par.photos:
+#         print(i)
+#
+# asyncio.run(test())
