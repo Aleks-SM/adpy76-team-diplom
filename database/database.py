@@ -1,6 +1,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy_utils import database_exists, create_database
 from dotenv import load_dotenv
 from database.models import Base
 
@@ -21,7 +22,6 @@ class Database:
         self.bd_pass = os.getenv("bd_pass")
         self.bd_host = os.getenv("bd_host")
         self.token = os.getenv("vk_token")
-        # self.filename = os.path.join(path[0], path[1], os.getenv("filename"))
 
     def create_connect(self):
         dsn = "{}://{}:{}@{}:{}/{}".format(
@@ -45,3 +45,7 @@ class Database:
     def drop_tables(self, engine):
         Base.metadata.drop_all(engine)
 
+    def check_database(self, engine):
+        if not database_exists(engine.url):
+            create_database(engine.url)
+        self.create_tables(self.create_connect())
