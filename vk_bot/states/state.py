@@ -13,7 +13,7 @@ class State:
 
     async def init(self):
         return
-    
+
     async def feedback(self):
         return
 
@@ -32,7 +32,11 @@ class State:
             return False, 0
 
     async def get_search_data(self) -> list[VkUserSearch]:
-        return list(await VKSearcherManyUsers(VkUserClient(self.user_id)).search_vk_users_as_client_params())
+        return list(
+            await VKSearcherManyUsers(
+                VkUserClient(self.user_id)
+            ).search_vk_users_as_client_params()
+        )
 
     async def get_self_interests(self) -> set[str]:
         return await VKSearcherUser(VkUserClient(self.user_id)).get_interests()
@@ -40,8 +44,3 @@ class State:
     @staticmethod
     async def get_single_user_data(user_id: int) -> VkUserSearch:
         return await VKSearcherUser(user_id).vk_user_search_params()
-
-
-
-
-

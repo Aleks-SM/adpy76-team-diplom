@@ -21,15 +21,19 @@ vk_bot = VkBot()
 async def button_action(message: Message):
     if message.payload is not None:
         user = VkUserClient(message.from_id)
-        action_payload = int(re.findall(r'\d+', message.payload.split(':')[1])[0])
+        action_payload = int(re.findall(r"\d+", message.payload.split(":")[1])[0])
         if user.state == StateEnum.REGISTERED:
             await vk_bot.action(message.from_id, MenuButtonEnum(action_payload))
         else:
-            await vk_bot.action(message.from_id, MenuButtonEnum.PLAIN_TEXT, str(action_payload))
+            await vk_bot.action(
+                message.from_id, MenuButtonEnum.PLAIN_TEXT, str(action_payload)
+            )
     else:
         await vk_bot.action(message.from_id, MenuButtonEnum.PLAIN_TEXT, message.text)
 
 
-@bot.on.raw_event(GroupEventType.MESSAGE_EVENT, MessageEvent, rules.PayloadRule({"cmd": "1"}))
+@bot.on.raw_event(
+    GroupEventType.MESSAGE_EVENT, MessageEvent, rules.PayloadRule({"cmd": "1"})
+)
 async def group_join_handler(event: MessageEvent):
     pass

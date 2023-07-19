@@ -8,7 +8,3 @@ class NextSearchState(SearchState):
 
     async def feedback(self, message=""):
         await self.send_user_search()
-
-
-
-

@@ -1,7 +1,12 @@
 from functools import total_ordering
 from enum import IntEnum
 from vk_bot.states.enums.state_enum import StateEnum
-from database.requests import get_user_data, check_user_exits, get_user_blacklist, set_user_data
+from database.requests import (
+    get_user_data,
+    check_user_exits,
+    get_user_blacklist,
+    set_user_data,
+)
 
 
 class GenderEnum(IntEnum):

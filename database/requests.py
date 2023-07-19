@@ -153,7 +153,10 @@ def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
     session = Database().create_session()
     if check_user_exits(client_user_id):
         query = (
-            session.query(Blacklist).join(User).filter(User.user_id == client_user_id).all()
+            session.query(Blacklist)
+            .join(User)
+            .filter(User.user_id == client_user_id)
+            .all()
         )
         res = []
         [
@@ -163,7 +166,9 @@ def set_blacklist_user(client_user_id: int, blacklist_user_id: int):
         ]
 
         if blacklist_user_id not in res:
-            user = Blacklist(user_id=client_user_id, blocked_vk_user_id=blacklist_user_id)
+            user = Blacklist(
+                user_id=client_user_id, blocked_vk_user_id=blacklist_user_id
+            )
             res.append(blacklist_user_id)
             session.add(user)
             session.commit()
@@ -175,7 +180,10 @@ def set_favourite_user(client_user_id: int, favourite_user_id: int):
     session = Database().create_session()
     if check_user_exits(client_user_id):
         query = (
-            session.query(Favorite).join(User).filter(User.user_id == client_user_id).all()
+            session.query(Favorite)
+            .join(User)
+            .filter(User.user_id == client_user_id)
+            .all()
         )
         res = []
         [
@@ -184,7 +192,9 @@ def set_favourite_user(client_user_id: int, favourite_user_id: int):
             if favorite.user_id == client_user_id
         ]
         if favourite_user_id not in res:
-            user = Favorite(user_id=client_user_id, favorite_vk_user_id=favourite_user_id)
+            user = Favorite(
+                user_id=client_user_id, favorite_vk_user_id=favourite_user_id
+            )
             res.append(favourite_user_id)
             session.add(user)
             session.commit()

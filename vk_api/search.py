@@ -13,10 +13,10 @@ class VkSearcherEngine:
     Database()
 
     def __init__(
-            self,
-            user_id,
-            user_api=API(os.getenv("user_token")),
-            api=API(os.getenv("vk_token")),
+        self,
+        user_id,
+        user_api=API(os.getenv("user_token")),
+        api=API(os.getenv("vk_token")),
     ):
         self.user_id = user_id
         self.user_api = user_api
@@ -38,25 +38,39 @@ class VkSearcherEngine:
             "tv",
         ]
 
-    async def parse_user_wall(self, searched_user_id, owners_filter='owner'):
+    async def parse_user_wall(self, searched_user_id, owners_filter="owner"):
         strings = await self.user_api.wall.get(searched_user_id, filter=owners_filter)
         result_string = []
         morph = pymorphy2.MorphAnalyzer()
-        functors_pos = {'INTJ', 'PRCL', 'CONJ', 'PREP', 'VERB', 'INFN', 'ADJF', 'ADJS', 'GRND', 'PRTF', 'PRTS', 'NPRO',
-                        'COMP', 'ADVB'}
+        functors_pos = {
+            "INTJ",
+            "PRCL",
+            "CONJ",
+            "PREP",
+            "VERB",
+            "INFN",
+            "ADJF",
+            "ADJS",
+            "GRND",
+            "PRTF",
+            "PRTS",
+            "NPRO",
+            "COMP",
+            "ADVB",
+        }
 
         for string in strings.items:
-            cleanr = re.compile(r'[^А-Яа-яЁёA-Za-z]')
-            clean_text = re.sub(cleanr, ' ', string.text)
-            clean_text_without_spaces = re.sub('\s{2,}', ' ', clean_text)
+            cleanr = re.compile(r"[^А-Яа-яЁёA-Za-z]")
+            clean_text = re.sub(cleanr, " ", string.text)
+            clean_text_without_spaces = re.sub("\s{2,}", " ", clean_text)
 
-            clean_text_without_spaces.split(' ')
+            clean_text_without_spaces.split(" ")
             text = clean_text_without_spaces.lower().lstrip().rstrip()
 
-            words = text.split(' ')
+            words = text.split(" ")
             for word in words:
                 if morph.parse(word)[0].tag.POS not in functors_pos:
-                    f = ''
+                    f = ""
                     m = morph.parse(word)[0]
                     if len(m) > 1:
                         f = f + m.normal_form
@@ -172,8 +186,8 @@ class VKSearcherUser(VkSearcherEngine):
             self.city = None
         else:
             self.age = (
-                    datetime.now().year
-                    - datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date().year
+                datetime.now().year
+                - datetime.strptime(user_params[0].bdate, "%d.%m.%Y").date().year
             )
             self.city = user_params[0].city.title
         finally:
@@ -274,8 +288,8 @@ class VKSearcherManyUsers(VKSearcherUser):
                     else:
                         if isinstance(res.bdate, str):
                             user.age = (
-                                    datetime.now().year
-                                    - datetime.strptime(res.bdate, "%d.%m.%Y").date().year
+                                datetime.now().year
+                                - datetime.strptime(res.bdate, "%d.%m.%Y").date().year
                             )
                         else:
                             user.age = None
@@ -313,7 +327,9 @@ class VKSearcherManyUsers(VKSearcherUser):
                         # await Talker(self.user.user_id).plain_text_without_buttons(
                         #     f"У вас нет прав на получение связанных фото пользователя {res.id}"
                         # )
-                        print(f'Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}')
+                        print(
+                            f"Пользователь id{self.user.user_id} не имеет прав на получение связанных фото {res.id}"
+                        )
                     else:
                         user.related_photos = related_photos
 

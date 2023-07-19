@@ -2,12 +2,20 @@ from vk_bot.states.dialog_states.registration.ask_age_max_state import AskAgeMax
 from vk_bot.states.dialog_states.registration.ask_age_min_state import AskAgeMinState
 from vk_bot.states.dialog_states.registration.ask_city_state import AskCityState
 from vk_bot.states.dialog_states.registration.ask_gender_state import AskGenderState
-from vk_bot.states.dialog_states.search.blacklist_user_search_state import BlacklistUserSearchState
-from vk_bot.states.dialog_states.search.favourite_user_search_state import FavouriteUserSearchState
+from vk_bot.states.dialog_states.search.blacklist_user_search_state import (
+    BlacklistUserSearchState,
+)
+from vk_bot.states.dialog_states.search.favourite_user_search_state import (
+    FavouriteUserSearchState,
+)
 from vk_bot.states.dialog_states.search.next_search_state import NextSearchState
 from vk_bot.states.dialog_states.search.people_search_state import PeopleSearch
-from vk_bot.states.dialog_states.search.show_favourites_search_state import ShowFavoritesSearchState
-from vk_bot.states.dialog_states.search.unknown_input_search_state import UnknownInputSearchState
+from vk_bot.states.dialog_states.search.show_favourites_search_state import (
+    ShowFavoritesSearchState,
+)
+from vk_bot.states.dialog_states.search.unknown_input_search_state import (
+    UnknownInputSearchState,
+)
 from vk_bot.states.enums.state_enum import StateEnum
 from vk_bot.states.dialog_states.registration.init_user_state import InitUserState
 from vk_bot.enums.menu_button_enums import MenuButtonEnum
@@ -57,7 +65,3 @@ class VkBot:
                 return AskGenderState(user_id)
             case None:
                 return InitUserState(user_id)
-
-
-
-

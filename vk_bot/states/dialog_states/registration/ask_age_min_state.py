@@ -26,4 +26,3 @@ class AskAgeMinState(State):
             text = "Пожалуйста, введите корректный возраст"
             await Talker(self.user_id).plain_text_without_buttons(text)
             return None
-

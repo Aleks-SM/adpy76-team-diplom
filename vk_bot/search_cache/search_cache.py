@@ -22,7 +22,10 @@ class SearchCache:
         return None
 
     def check_if_not_empty(self, user_id):
-        return user_id in self.search_data_dict and len(self.search_data_dict[user_id].queue) > 0
+        return (
+            user_id in self.search_data_dict
+            and len(self.search_data_dict[user_id].queue) > 0
+        )
 
 
 class SearchData:

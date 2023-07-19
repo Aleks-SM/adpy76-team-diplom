@@ -23,8 +23,5 @@ async def check_if_city_exists(city: str) -> bool:
 async def get_attachment_for_vk_bot(session, user_id, photo_url, photo_uploader):
     photo_file = await session.get(photo_url)
     file = await photo_file.content.read()
-    photo = await photo_uploader.upload(
-        file_source=file,
-        peer_id=user_id
-    )
+    photo = await photo_uploader.upload(file_source=file, peer_id=user_id)
     return photo
