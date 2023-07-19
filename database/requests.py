@@ -57,20 +57,19 @@ def get_user_favorites(user_id: int) -> set[int]:
 
 # Проверяет существует ли юзер
 def check_user_exits(user_id: int) -> bool:
+    Database().check_database(Database().create_connect())
     session = Database().create_session()
     query = session.query(User).filter(User.user_id == user_id).first()
     if query is None:
-        res = False
+        result = False
     else:
-        res = True
+        result = True
     session.close()
-    return res
+    return result
 
 
 # Добавляет данные в базу
 def set_user_data(user_id: int, param_dict: dict):
-    # dict_example = {"age_min": 23}
-    # dict_example2 = {"city": "Moscow"}
     session = Database().create_session()
     query = session.query(User).filter(User.user_id == user_id).first()
     if query != None:
@@ -89,8 +88,6 @@ def set_user_data(user_id: int, param_dict: dict):
         res = "{} {} {}".format("Данные пользователя с id:", user_id, "обновлены")
     else:
         res = "{} {} {}".format("Пользователь с id:", user_id, "не существует в БД")
-        # param_dict["user_id"] = user_id
-        # create_user_and_set_data(param_dict)
     session.commit()
     session.close()
     return res
