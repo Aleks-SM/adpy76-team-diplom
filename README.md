@@ -4,7 +4,7 @@
 ## Технические требования
 На вашем ПК должен быть установлен:
 1. Python 3.10, если нет необходимо установить с [офсайта](https://www.python.org/downloads/)
-2. PostgreSQL ```sudo apt update && sudo apt install postgresql-14```
+2. PostgreSQL [офсайт](https://www.postgresql.org/download/)
 
 <details>
    <summary>Схема БД</summary>
