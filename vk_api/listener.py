@@ -1,16 +1,15 @@
 import re
-
-from vkbottle.bot import Bot, Message, MessageEvent, rules
-from vkbottle_types import GroupTypes
+import os
+from vkbottle import Bot
+from vkbottle.bot import Message, MessageEvent, rules
 from vkbottle_types.events import GroupEventType
-
 from vk_bot.enums.menu_button_enums import MenuButtonEnum
 from vk_bot.states.enums.state_enum import StateEnum
 from vk_bot.user.user import VkUserClient
 from vk_bot.vk_bot import VkBot
-import os
 
-from vkbottle import Bot
+
+
 
 bot = Bot(os.getenv("vk_token"))
 

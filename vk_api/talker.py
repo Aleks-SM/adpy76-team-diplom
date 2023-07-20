@@ -3,15 +3,12 @@ import aiohttp
 
 from vk_bot.enums.menu_button_enums import MenuButtonEnum
 from vk_bot.user.user import VkUserSearch, GenderEnum
-from vkbottle.bot import Bot, Message, MessageEvent, rules
+
 from vkbottle import (
     Keyboard,
     KeyboardButtonColor,
     Text,
-    Text,
-    GroupEventType,
     PhotoMessageUploader,
-    PhotoUploader,
 )
 from vk_api.tools import get_attachment_for_vk_bot
 from vkbottle import Bot
@@ -40,9 +37,9 @@ class Talker:
         keyboard = (
             Keyboard(one_time=True)
             .add(Text("Поиск", payload={"cmd": MenuButtonEnum.SEARCH.value.__str__()}))
-            .add(Text("Лайк", payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}))
+            .add(Text("Добавить в избранные", payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}))
             .add(
-                Text("Блок", payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()})
+                Text("Пропустить", payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()})
             )
             .add(
                 Text("Следующий", payload={"cmd": MenuButtonEnum.NEXT.value.__str__()})
@@ -107,12 +104,12 @@ class Talker:
                 color=KeyboardButtonColor.PRIMARY,
             )
             .add(
-                Text("Лайк", payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}),
+                Text("Добавить в избранные", payload={"cmd": MenuButtonEnum.LIKE.value.__str__()}),
                 color=KeyboardButtonColor.POSITIVE,
             )
             .add(
                 Text(
-                    "Блок", payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()}
+                    "Пропустить", payload={"cmd": MenuButtonEnum.BLOCK_USER.value.__str__()}
                 ),
                 color=KeyboardButtonColor.NEGATIVE,
             )
