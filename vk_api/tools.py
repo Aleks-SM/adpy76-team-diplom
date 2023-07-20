@@ -12,12 +12,6 @@ async def check_if_city_exists(city: str) -> bool:
         for city_name in cities.items:
             if city_name.title.lower() == city:
                 return True
-    #         else:
-    #             # если клиент ввел несколько букв своего города, то получит список названий похожих городов
-    #             cities_set.add(city_name.title)
-    # if cities_set:
-    #     print(cities_set)
-    #     return cities_set
 
 
 async def get_attachment_for_vk_bot(session, user_id, photo_url, photo_uploader):
